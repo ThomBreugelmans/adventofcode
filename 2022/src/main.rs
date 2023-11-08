@@ -21,6 +21,7 @@ fn main() {
 
     match args.day {
         1 => day1::run(),
+        2 => day2::run(),
         _ => unimplemented!(),
     };
 }
