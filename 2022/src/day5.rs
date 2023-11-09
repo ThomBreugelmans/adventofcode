@@ -68,14 +68,17 @@ fn _run(input: Vec<String>) -> String {
 
 #[test]
 fn test() {
-    let mut answer = "".to_string();
-    let mut input = Vec::<String>::new();
-    for line in read_to_string("input/test/day5").unwrap().lines() {
-        if answer.is_empty() {
-            answer = line.to_string();
-            continue;
-        }
-        input.push(line.to_string());
-    }
+    let answer = "MCD".to_string();
+    let input = vec![
+        "    [D]    ".to_string(),
+        "[N] [C]    ".to_string(),
+        "[Z] [M] [P]".to_string(),
+        " 1   2   3 ".to_string(),
+        "".to_string(),
+        "move 1 from 2 to 1".to_string(),
+        "move 3 from 1 to 3".to_string(),
+        "move 2 from 2 to 1".to_string(),
+        "move 1 from 1 to 2".to_string(),
+    ];
     assert_eq!(answer, _run(input));
 }

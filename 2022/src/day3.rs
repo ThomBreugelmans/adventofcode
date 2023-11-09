@@ -71,14 +71,14 @@ fn test_priority() {
 
 #[test]
 fn test() {
-    let mut answer = "".to_string();
-    let mut input = Vec::<String>::new();
-    for line in read_to_string("input/test/day3").unwrap().lines() {
-        if answer.is_empty() {
-            answer = line.to_string();
-            continue;
-        }
-        input.push(line.to_string());
-    }
-    assert_eq!(answer.parse::<i32>().unwrap(), _run(input));
+    let answer = 70;
+    let input = vec![
+        "vJrwpWtwJgWrhcsFMMfFFhFp".to_string(),
+        "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL".to_string(),
+        "PmmdzqPrVvPwwTWBwg".to_string(),
+        "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn".to_string(),
+        "ttgJtRGJQctTZtZT".to_string(),
+        "CrZsJsPPZsGzwwsLwLmpwMDw".to_string(),
+    ];
+    assert_eq!(answer, _run(input));
 }

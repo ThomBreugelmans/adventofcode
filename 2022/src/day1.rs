@@ -34,14 +34,22 @@ fn _run(input: Vec<String>) -> i32 {
 
 #[test]
 fn test() {
-    let mut answer = "".to_string();
-    let mut input = Vec::<String>::new();
-    for line in read_to_string("input/test/day1").unwrap().lines() {
-        if answer.is_empty() {
-            answer = line.to_string();
-            continue;
-        }
-        input.push(line.to_string());
-    }
-    assert_eq!(answer.parse::<i32>().unwrap(), _run(input));
+    let answer = 45000;
+    let input = vec![
+        "1000".to_string(),
+        "2000".to_string(),
+        "3000".to_string(),
+        "".to_string(),
+        "4000".to_string(),
+        "".to_string(),
+        "5000".to_string(),
+        "6000".to_string(),
+        "".to_string(),
+        "7000".to_string(),
+        "8000".to_string(),
+        "9000".to_string(),
+        "".to_string(),
+        "10000".to_string(),
+    ];
+    assert_eq!(answer, _run(input));
 }

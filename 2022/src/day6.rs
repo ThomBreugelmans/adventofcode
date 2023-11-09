@@ -37,14 +37,7 @@ fn _run(input: Vec<String>) -> i32 {
 
 #[test]
 fn test() {
-    let mut answer = "".to_string();
-    let mut input = Vec::<String>::new();
-    for line in read_to_string("input/test/day6").unwrap().lines() {
-        if answer.is_empty() {
-            answer = line.to_string();
-            continue;
-        }
-        input.push(line.to_string());
-    }
-    assert_eq!(answer.parse::<i32>().unwrap(), _run(input));
+    let answer = 26;
+    let input = vec!["zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw".to_string()];
+    assert_eq!(answer, _run(input));
 }
