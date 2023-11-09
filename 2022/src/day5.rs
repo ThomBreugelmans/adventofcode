@@ -55,10 +55,12 @@ fn _run(input: Vec<String>) -> String {
     let (mut stacks, actions) = parse(input);
 
     for (count, from, to) in actions {
+        let mut intermediat = VecDeque::new();
         for _ in 0..count {
             let b = stacks[from as usize].pop_back().unwrap();
-            stacks[to as usize].push_back(b);
+            intermediat.push_front(b);
         }
+        stacks[to as usize].append(&mut intermediat);
     }
 
     String::from_iter(stacks.iter().map(|e| e.clone().pop_back().unwrap()))
