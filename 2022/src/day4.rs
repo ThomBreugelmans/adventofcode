@@ -28,11 +28,17 @@ fn _run(input: Vec<String>) -> i32 {
     };
     let mut res = 0;
     for ((a, b), (c, d)) in pairs {
-        if a >= c && b <= d {
-            res += 1;
-        } else if c >= a && d <= b {
-            res += 1;
-        }
+        res += if a >= c && a <= d {
+            1
+        } else if c >= a && c <= b {
+            1
+        } else if b >= c && b <= d {
+            1
+        } else if d >= a && d <= b {
+            1
+        } else {
+            0
+        };
     }
 
     res
