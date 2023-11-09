@@ -46,14 +46,14 @@ fn _run(input: Vec<String>) -> i32 {
 
 #[test]
 fn test() {
-    let mut answer = "".to_string();
-    let mut input = Vec::<String>::new();
-    for line in read_to_string("input/test/day4").unwrap().lines() {
-        if answer.is_empty() {
-            answer = line.to_string();
-            continue;
-        }
-        input.push(line.to_string());
-    }
-    assert_eq!(answer.parse::<i32>().unwrap(), _run(input));
+    let answer = 4;
+    let input = vec![
+        "2-4,6-8".to_string(),
+        "2-3,4-5".to_string(),
+        "5-7,7-9".to_string(),
+        "2-8,3-7".to_string(),
+        "6-6,4-6".to_string(),
+        "2-6,4-8".to_string(),
+    ];
+    assert_eq!(answer, _run(input));
 }

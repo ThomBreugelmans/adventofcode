@@ -60,14 +60,7 @@ fn test_scores() {
 
 #[test]
 fn test() {
-    let mut answer = "".to_string();
-    let mut input = Vec::<String>::new();
-    for line in read_to_string("input/test/day2").unwrap().lines() {
-        if answer.is_empty() {
-            answer = line.to_string();
-            continue;
-        }
-        input.push(line.to_string());
-    }
-    assert_eq!(answer.parse::<i32>().unwrap(), _run(input));
+    let answer = 12;
+    let input = vec!["A Y".to_string(), "B X".to_string(), "C Z".to_string()];
+    assert_eq!(answer, _run(input));
 }
