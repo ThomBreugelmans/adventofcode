@@ -22,13 +22,13 @@ fn _run(input: Vec<String>) -> i32 {
         .chars()
         .collect::<Vec<char>>();
 
-    for i in 0..string.len() - 4 {
+    for i in 0..string.len() - 14 {
         let mut set = HashSet::new();
-        for j in i..i + 4 {
+        for j in i..i + 14 {
             set.insert(string[j]);
         }
-        if set.len() == 4 {
-            return i as i32 + 4;
+        if set.len() == 14 {
+            return i as i32 + 14;
         }
     }
 
