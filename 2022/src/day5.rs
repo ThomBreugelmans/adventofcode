@@ -1,19 +1,4 @@
 use std::collections::VecDeque;
-use std::fs::read_to_string;
-
-pub fn run() {
-    // get input code:
-    let input: Vec<String> = {
-        let mut _input = Vec::new();
-        for line in read_to_string("input/day5").unwrap().lines() {
-            _input.push(line.to_string());
-        }
-        _input
-    };
-
-    let output = _run(input);
-    println!("{}", output);
-}
 
 fn parse(input: Vec<String>) -> (Vec<VecDeque<char>>, Vec<(i32, i32, i32)>) {
     let mut stacks = Vec::<VecDeque<char>>::new();
@@ -51,7 +36,7 @@ fn parse(input: Vec<String>) -> (Vec<VecDeque<char>>, Vec<(i32, i32, i32)>) {
     (stacks, actions)
 }
 
-fn _run(input: Vec<String>) -> String {
+pub fn run(input: Vec<String>) -> String {
     let (mut stacks, actions) = parse(input);
 
     for (count, from, to) in actions {
@@ -80,5 +65,5 @@ fn test() {
         "move 2 from 2 to 1".to_string(),
         "move 1 from 1 to 2".to_string(),
     ];
-    assert_eq!(answer, _run(input));
+    assert_eq!(answer, run(input));
 }

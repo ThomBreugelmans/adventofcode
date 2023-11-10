@@ -1,20 +1,6 @@
 use std::fs::read_to_string;
 
-pub fn run() {
-    // get input code:
-    let input: Vec<String> = {
-        let mut _input = Vec::new();
-        for line in read_to_string("input/day4").unwrap().lines() {
-            _input.push(line.to_string());
-        }
-        _input
-    };
-
-    let output = _run(input);
-    println!("{}", output);
-}
-
-fn _run(input: Vec<String>) -> i32 {
+pub fn run(input: Vec<String>) -> String {
     let pairs = {
         let mut _pairs = Vec::new();
         for row in input {
@@ -41,12 +27,12 @@ fn _run(input: Vec<String>) -> i32 {
         };
     }
 
-    res
+    res.to_string()
 }
 
 #[test]
 fn test() {
-    let answer = 4;
+    let answer = "4".to_string();
     let input = vec![
         "2-4,6-8".to_string(),
         "2-3,4-5".to_string(),
@@ -55,5 +41,5 @@ fn test() {
         "6-6,4-6".to_string(),
         "2-6,4-8".to_string(),
     ];
-    assert_eq!(answer, _run(input));
+    assert_eq!(answer, run(input));
 }

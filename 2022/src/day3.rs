@@ -1,20 +1,5 @@
 use std::cmp::min;
 use std::collections::{HashMap, HashSet};
-use std::fs::read_to_string;
-
-pub fn run() {
-    // get input code:
-    let input: Vec<String> = {
-        let mut _input = Vec::new();
-        for line in read_to_string("input/day3").unwrap().lines() {
-            _input.push(line.to_string());
-        }
-        _input
-    };
-
-    let output = _run(input);
-    println!("{}", output);
-}
 
 fn priority(item: char) -> i32 {
     (if item >= 'a' {
@@ -24,7 +9,7 @@ fn priority(item: char) -> i32 {
     }) as i32
 }
 
-fn _run(input: Vec<String>) -> i32 {
+pub fn run(input: Vec<String>) -> String {
     let mut items = Vec::new();
     let mut common = HashMap::new();
 
@@ -51,7 +36,7 @@ fn _run(input: Vec<String>) -> i32 {
         }
     }
 
-    items.iter().map(|&e| priority(e)).sum::<i32>()
+    items.iter().map(|&e| priority(e)).sum::<i32>().to_string()
 }
 
 #[test]
@@ -71,7 +56,7 @@ fn test_priority() {
 
 #[test]
 fn test() {
-    let answer = 70;
+    let answer = "70".to_string();
     let input = vec![
         "vJrwpWtwJgWrhcsFMMfFFhFp".to_string(),
         "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL".to_string(),
@@ -80,5 +65,5 @@ fn test() {
         "ttgJtRGJQctTZtZT".to_string(),
         "CrZsJsPPZsGzwwsLwLmpwMDw".to_string(),
     ];
-    assert_eq!(answer, _run(input));
+    assert_eq!(answer, run(input));
 }
