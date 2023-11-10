@@ -1,19 +1,3 @@
-use std::fs::read_to_string;
-
-pub fn run() {
-    // get input code:
-    let input: Vec<String> = {
-        let mut _input = Vec::new();
-        for line in read_to_string("input/day2").unwrap().lines() {
-            _input.push(line.to_string());
-        }
-        _input
-    };
-
-    let output = _run(input);
-    println!("{}", output);
-}
-
 fn score(opponent: i8, you: i8) -> i32 {
     match you {
         0 => (((opponent - 1).rem_euclid(3)) + 1) as i32,
@@ -23,7 +7,7 @@ fn score(opponent: i8, you: i8) -> i32 {
     }
 }
 
-fn _run(input: Vec<String>) -> i32 {
+pub fn run(input: Vec<String>) -> String {
     let mut rounds = Vec::new();
     for round in input {
         let mut chars = round.chars();
@@ -37,7 +21,7 @@ fn _run(input: Vec<String>) -> i32 {
         s += score(opponent, you);
     }
 
-    s
+    s.to_string()
 }
 
 #[test]
@@ -60,7 +44,7 @@ fn test_scores() {
 
 #[test]
 fn test() {
-    let answer = 12;
+    let answer = "12".to_string();
     let input = vec!["A Y".to_string(), "B X".to_string(), "C Z".to_string()];
-    assert_eq!(answer, _run(input));
+    assert_eq!(answer, run(input));
 }

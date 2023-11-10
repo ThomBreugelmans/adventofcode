@@ -1,21 +1,6 @@
 use std::collections::HashSet;
-use std::fs::read_to_string;
 
-pub fn run() {
-    // get input code:
-    let input: Vec<String> = {
-        let mut _input = Vec::new();
-        for line in read_to_string("input/day6").unwrap().lines() {
-            _input.push(line.to_string());
-        }
-        _input
-    };
-
-    let output = _run(input);
-    println!("{}", output);
-}
-
-fn _run(input: Vec<String>) -> i32 {
+pub fn run(input: Vec<String>) -> String {
     let string = input
         .iter()
         .rfold("".to_string(), |_, b| b.clone())
@@ -28,16 +13,16 @@ fn _run(input: Vec<String>) -> i32 {
             set.insert(string[j]);
         }
         if set.len() == 14 {
-            return i as i32 + 14;
+            return (i as i32 + 14).to_string();
         }
     }
 
-    string.len() as i32 + 1
+    (string.len() as i32 + 1).to_string()
 }
 
 #[test]
 fn test() {
-    let answer = 26;
+    let answer = "26".to_string();
     let input = vec!["zcfzfwzzqfrljwzlrfnpqdbhtmscgvjw".to_string()];
-    assert_eq!(answer, _run(input));
+    assert_eq!(answer, run(input));
 }
