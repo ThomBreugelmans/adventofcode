@@ -90,18 +90,22 @@ pub fn run(input: Vec<String>) -> String {
         }
     }
 
-    let nodes_with_cond = tree.find_nodes_with(|t| t.size <= 100000 && t.is_dir);
-    let mut res = 0;
-    for i in nodes_with_cond {
-        res += tree.get_data_id(i).size;
-    }
+    // diff minimum needed size to delete
+    let diff = (tree.get_data_id(0).size + 30000000) - 70000000;
 
-    res.to_string()
+    let nodes_with_cond = tree.find_nodes_with(|t| t.size >= diff && t.is_dir);
+
+    nodes_with_cond
+        .iter()
+        .map(|&i| tree.get_data_id(i).size)
+        .min()
+        .unwrap()
+        .to_string()
 }
 
 #[test]
 fn test() {
-    let answer = "95437".to_string();
+    let answer = "24933642".to_string();
     let input = vec![
         "$ cd /".to_string(),
         "$ ls".to_string(),
