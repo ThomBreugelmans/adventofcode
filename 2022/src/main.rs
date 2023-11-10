@@ -12,6 +12,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 #[derive(Parser)]
 struct CliArguments {
@@ -49,6 +50,7 @@ fn main() {
         6 => day6::run(input),
         7 => day7::run(input),
         8 => day8::run(input),
+        9 => day9::run(input),
         _ => unimplemented!(),
     };
 
