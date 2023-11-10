@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 fn parse(input: Vec<String>) -> Vec<Vec<i32>> {
     let mut res = Vec::new();
     for line in input {
@@ -16,56 +14,48 @@ pub fn run(input: Vec<String>) -> String {
     let width = input[0].len();
     let height = input.len();
     let parsed = parse(input);
-    let mut visible_tree_heights = HashSet::new();
+    let mut scenic_score = 0;
 
     for x in 0..width {
         for y in 0..height {
             let h = parsed[y][x];
-            let mut visible = true;
-            for xi in 0..x {
-                if parsed[y][xi] >= h {
-                    visible = false;
+            let mut new_score = 1;
+            for xi in (0..=x).rev() {
+                if (x != xi && parsed[y][xi] >= h) || xi == 0 {
+                    new_score *= xi.abs_diff(x);
+                    break;
                 }
             }
-            if visible {
-                visible_tree_heights.insert((x, y));
-            }
-            visible = true;
-            for xi in x + 1..width {
-                if parsed[y][xi] >= h {
-                    visible = false;
+            for xi in x..width {
+                if (xi != x && parsed[y][xi] >= h) || xi == width - 1 {
+                    new_score *= xi.abs_diff(x);
+                    break;
                 }
             }
-            if visible {
-                visible_tree_heights.insert((x, y));
-            }
-            visible = true;
-            for yi in 0..y {
-                if parsed[yi][x] >= h {
-                    visible = false;
+            for yi in (0..=y).rev() {
+                if (yi != y && parsed[yi][x] >= h) || yi == 0 {
+                    new_score *= yi.abs_diff(y);
+                    break;
                 }
             }
-            if visible {
-                visible_tree_heights.insert((x, y));
-            }
-            visible = true;
-            for yi in y + 1..height {
-                if parsed[yi][x] >= h {
-                    visible = false;
+            for yi in y..height {
+                if (yi != y && parsed[yi][x] >= h) || yi == height - 1 {
+                    new_score *= yi.abs_diff(y);
+                    break;
                 }
             }
-            if visible {
-                visible_tree_heights.insert((x, y));
+            if new_score > scenic_score {
+                scenic_score = new_score;
             }
         }
     }
 
-    visible_tree_heights.len().to_string()
+    scenic_score.to_string()
 }
 
 #[test]
 fn test() {
-    let answer = "21".to_string();
+    let answer = "8".to_string();
     let input = vec![
         "30373".to_string(),
         "25512".to_string(),
