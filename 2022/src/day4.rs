@@ -1,5 +1,3 @@
-use std::fs::read_to_string;
-
 pub fn run(input: Vec<String>) -> String {
     let pairs = {
         let mut _pairs = Vec::new();
