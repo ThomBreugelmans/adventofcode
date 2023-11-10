@@ -39,6 +39,7 @@ fn parse(input: Vec<String>) -> Vec<Direction> {
     actions
 }
 
+#[derive(Clone, Debug)]
 struct Node {
     x: i32,
     y: i32,
@@ -46,54 +47,78 @@ struct Node {
 
 pub fn run(input: Vec<String>) -> String {
     let directions = parse(input);
-    let mut head = Node { x: 0, y: 0 };
-    let mut tail = Node { x: 0, y: 0 };
+    let mut rope: [Node; 10] = [
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+        Node { x: 0, y: 0 },
+    ];
     let mut visited = HashSet::new();
-    visited.insert((tail.x, tail.y));
+    visited.insert((0, 0));
 
     for d in directions {
         let new_head = match d {
             Direction::Up => Node {
-                x: head.x,
-                y: head.y + 1,
+                x: rope[0].x,
+                y: rope[0].y + 1,
             },
             Direction::Down => Node {
-                x: head.x,
-                y: head.y - 1,
+                x: rope[0].x,
+                y: rope[0].y - 1,
             },
             Direction::Left => Node {
-                x: head.x - 1,
-                y: head.y,
+                x: rope[0].x - 1,
+                y: rope[0].y,
             },
             Direction::Right => Node {
-                x: head.x + 1,
-                y: head.y,
+                x: rope[0].x + 1,
+                y: rope[0].y,
             },
         };
-        if tail.x.abs_diff(new_head.x) > 1 || tail.y.abs_diff(new_head.y) > 1 {
-            tail = Node {
-                x: head.x,
-                y: head.y,
-            };
+
+        fn update_rope(rope: &mut [Node; 10], n: &Node, i: usize) {
+            if i == 0 {
+                update_rope(rope, n, i + 1);
+                rope[i] = n.clone();
+            } else {
+                if i >= 10 {
+                    return;
+                }
+                if rope[i].x.abs_diff(n.x) > 1 || rope[i].y.abs_diff(n.y) > 1 {
+                    let x = Node {
+                        x: rope[i].x + (n.x - rope[i].x).clamp(-1, 1),
+                        y: rope[i].y + (n.y - rope[i].y).clamp(-1, 1),
+                    };
+                    update_rope(rope, &x, i + 1);
+                    rope[i] = x;
+                }
+            }
         }
-        visited.insert((tail.x, tail.y));
-        head = new_head;
+
+        update_rope(&mut rope, &new_head, 0);
+        visited.insert((rope[9].x, rope[9].y));
     }
     visited.len().to_string()
 }
 
 #[test]
 fn test() {
-    let answer = "13".to_string();
+    let answer = "36".to_string();
     let input = vec![
-        "R 4".to_string(),
-        "U 4".to_string(),
-        "L 3".to_string(),
-        "D 1".to_string(),
-        "R 4".to_string(),
-        "D 1".to_string(),
-        "L 5".to_string(),
-        "R 2".to_string(),
+        "R 5".to_string(),
+        "U 8".to_string(),
+        "L 8".to_string(),
+        "D 3".to_string(),
+        "R 17".to_string(),
+        "D 10".to_string(),
+        "L 25".to_string(),
+        "U 20".to_string(),
     ];
 
     assert_eq!(answer, run(input));
