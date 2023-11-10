@@ -1,10 +1,10 @@
 use std::collections::VecDeque;
 
 struct Monkey {
-    items: VecDeque<i32>,
+    items: VecDeque<u64>,
     op: String,
     rhs: String,
-    div_by: i32,
+    div_by: u64,
     true_monkey: usize,
     false_monkey: usize,
 }
@@ -20,7 +20,7 @@ fn parse(input: Vec<String>) -> Vec<Monkey> {
             .get(18..)
             .unwrap_or("")
             .split(", ")
-            .filter_map(|s| s.parse::<i32>().ok())
+            .filter_map(|s| s.parse::<u64>().ok())
             .collect();
         let operation_s = inp_iter.next().unwrap();
         let op = operation_s.get(23..24).unwrap().to_string();
@@ -30,7 +30,7 @@ fn parse(input: Vec<String>) -> Vec<Monkey> {
             .unwrap()
             .get(21..)
             .unwrap()
-            .parse::<i32>()
+            .parse::<u64>()
             .unwrap();
         let true_monkey = inp_iter
             .next()
@@ -64,25 +64,26 @@ fn parse(input: Vec<String>) -> Vec<Monkey> {
 pub fn run(input: Vec<String>) -> String {
     let mut monkeys = parse(input);
 
+    let modulo = monkeys.iter().map(|m| m.div_by).product::<u64>();
     let mut counts = Vec::new();
     for _ in &monkeys {
-        counts.push(0u32);
+        counts.push(0usize);
     }
 
-    for _ in 0..20 {
+    for _ in 0..10000 {
         for i in 0..monkeys.len() {
             while !monkeys[i].items.is_empty() {
                 let mut item = monkeys[i].items.pop_front().unwrap();
                 item = {
                     let r = match monkeys[i].rhs.as_ref() {
                         "old" => item,
-                        d => d.parse::<i32>().unwrap(),
+                        d => d.parse::<u64>().unwrap(),
                     };
                     match monkeys[i].op.as_ref() {
                         "*" => item * r,
                         _ => item + r,
                     }
-                } / 3;
+                } % modulo;
                 let to_monkey = {
                     if item % monkeys[i].div_by == 0 {
                         monkeys[i].true_monkey
@@ -104,7 +105,7 @@ pub fn run(input: Vec<String>) -> String {
 
 #[test]
 fn test() {
-    let answer = "10605".to_string();
+    let answer = "2713310158".to_string();
     let input = vec![
         "Monkey 0:".to_string(),
         "  Starting items: 79, 98".to_string(),
