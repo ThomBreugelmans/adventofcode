@@ -1,3 +1,4 @@
+use std::cmp::Ordering;
 use std::str::Chars;
 
 #[derive(Clone, Debug)]
@@ -27,6 +28,92 @@ impl Packet {
     }
     fn is_list(&self) -> bool {
         !self.is_num()
+    }
+}
+
+impl Ord for Packet {
+    fn cmp(&self, other: &Self) -> Ordering {
+        let res = test_left_and_right(self, other);
+        if let Some(x) = res {
+            if x {
+                Ordering::Less
+            } else {
+                Ordering::Equal
+            }
+        } else {
+            Ordering::Greater
+        }
+    }
+}
+
+impl PartialOrd for Packet {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+impl PartialEq for Packet {
+    fn eq(&self, other: &Self) -> bool {
+        matches!(self.cmp(other), Ordering::Equal)
+    }
+}
+
+impl Eq for Packet {}
+
+fn test_left_and_right(left: &Packet, right: &Packet) -> Option<bool> {
+    let l_list = left.unwrap_list();
+    let mut l_iter = l_list.iter().peekable();
+    let r_list = right.unwrap_list();
+    let mut r_iter = r_list.iter().peekable();
+    loop {
+        if l_iter.peek().is_none() || r_iter.peek().is_none() {
+            break;
+        }
+        let l = l_iter.next().unwrap();
+        let r = r_iter.next().unwrap();
+
+        if l.is_num() && r.is_num() {
+            // both a number
+            let lu = l.unwrap_num();
+            let ru = r.unwrap_num();
+            if lu < ru {
+                return Some(true);
+            } else if lu > ru {
+                return Some(false);
+            }
+        } else if l.is_list() && r.is_list() {
+            // both a list
+            match test_left_and_right(l, r) {
+                Some(true) => return Some(true),
+                Some(false) => return Some(false),
+                None => continue,
+            }
+        } else {
+            // one of both is a list and the other a number
+            let lu: Packet;
+            let ru: Packet;
+            if l.is_num() {
+                // left is number, make list
+                lu = Packet::List(vec![Packet::Num(l.unwrap_num())]);
+                ru = r.clone();
+            } else {
+                // right is number, make list
+                lu = l.clone();
+                ru = Packet::List(vec![Packet::Num(r.unwrap_num())]);
+            }
+            match test_left_and_right(&lu, &ru) {
+                Some(true) => return Some(true),
+                Some(false) => return Some(false),
+                None => continue,
+            }
+        }
+    }
+    if l_iter.peek().is_none() && r_iter.peek().is_some() {
+        Some(true)
+    } else if r_iter.peek().is_none() {
+        Some(false)
+    } else {
+        None
     }
 }
 
@@ -88,82 +175,50 @@ fn parse(input: Vec<String>) -> Vec<(Packet, Packet)> {
 }
 
 pub fn run(input: Vec<String>) -> String {
-    fn test_left_and_right(left: &Packet, right: &Packet) -> Option<bool> {
-        let l_list = left.unwrap_list();
-        let mut l_iter = l_list.iter().peekable();
-        let r_list = right.unwrap_list();
-        let mut r_iter = r_list.iter().peekable();
-        loop {
-            if l_iter.peek().is_none() || r_iter.peek().is_none() {
-                break;
-            }
-            let l = l_iter.next().unwrap();
-            let r = r_iter.next().unwrap();
-
-            if l.is_num() && r.is_num() {
-                // both a number
-                let lu = l.unwrap_num();
-                let ru = r.unwrap_num();
-                if lu < ru {
-                    return Some(true);
-                } else if lu > ru {
-                    return Some(false);
-                }
-            } else if l.is_list() && r.is_list() {
-                // both a list
-                match test_left_and_right(l, r) {
-                    Some(true) => return Some(true),
-                    Some(false) => return Some(false),
-                    None => continue,
-                }
-            } else {
-                // one of both is a list and the other a number
-                let lu: Packet;
-                let ru: Packet;
-                if l.is_num() {
-                    // left is number, make list
-                    lu = Packet::List(vec![Packet::Num(l.unwrap_num())]);
-                    ru = r.clone();
-                } else {
-                    // right is number, make list
-                    lu = l.clone();
-                    ru = Packet::List(vec![Packet::Num(r.unwrap_num())]);
-                }
-                match test_left_and_right(&lu, &ru) {
-                    Some(true) => return Some(true),
-                    Some(false) => return Some(false),
-                    None => continue,
-                }
-            }
-        }
-        if l_iter.peek().is_none() {
-            Some(true)
-        } else if r_iter.peek().is_none() {
-            Some(false)
-        } else {
-            None
-        }
-    }
     let parsed = parse(input);
 
-    let mut summed_correct_pairs = 0;
-
-    for (i, (left, right)) in parsed.into_iter().enumerate() {
-        match test_left_and_right(&left, &right) {
-            Some(true) => {
-                println!("{} is correct", i + 1);
-                summed_correct_pairs += i + 1
-            }
-            _ => continue,
-        }
+    let mut res = vec![
+        Packet::List(vec![Packet::List(vec![Packet::Num(2)])]),
+        Packet::List(vec![Packet::List(vec![Packet::Num(6)])]),
+    ];
+    for (l, r) in parsed {
+        res.push(l);
+        res.push(r);
     }
 
-    summed_correct_pairs.to_string()
+    res.sort();
+
+    res.iter()
+        .enumerate()
+        .filter_map(|(i, e)| {
+            if e.is_list() {
+                let a = e.unwrap_list();
+                if a.len() == 1 && a[0].is_list() {
+                    let c = a[0].unwrap_list();
+                    if c.len() == 1 && c[0].is_num() {
+                        let num = c[0].unwrap_num();
+                        if num == 2 || num == 6 {
+                            Some(i as i32 + 1)
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .product::<i32>()
+        .to_string()
 }
 
 #[test]
 fn test() {
-    let answer = "13".to_string();
+    let answer = "140".to_string();
     let input = vec![
         "[1,1,3,1,1]".to_string(),
         "[1,1,5,1,1]".to_string(),
