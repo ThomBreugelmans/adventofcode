@@ -39,14 +39,14 @@ pub fn run(input: Vec<String>) -> String {
 
     let mut sandpos = (500, 0);
     let mut count = 0;
-    while sandpos.1 < lowest {
+    while sands.get(&(500, 0)).is_none() {
         let mut broke = false;
         for v in [
             (sandpos.0, sandpos.1 + 1),
             (sandpos.0 - 1, sandpos.1 + 1),
             (sandpos.0 + 1, sandpos.1 + 1),
         ] {
-            if rocks.get(&v).is_none() && sands.get(&v).is_none() {
+            if v.1 < lowest + 2 && rocks.get(&v).is_none() && sands.get(&v).is_none() {
                 sandpos = v;
                 broke = true;
                 break;
@@ -64,7 +64,7 @@ pub fn run(input: Vec<String>) -> String {
 
 #[test]
 fn test() {
-    let answer = "24".to_string();
+    let answer = "93".to_string();
     let input = vec![
         "498,4 -> 498,6 -> 496,6".to_string(),
         "503,4 -> 502,4 -> 502,9 -> 494,9".to_string(),
