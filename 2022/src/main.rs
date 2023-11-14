@@ -10,6 +10,7 @@ mod day11;
 mod day12;
 mod day13;
 mod day14;
+mod day15;
 mod day2;
 mod day3;
 mod day4;
@@ -37,7 +38,7 @@ fn main() {
     // get input code:
     let input: Vec<String> = {
         let mut _input = Vec::new();
-        for line in read_to_string(format!("input/day{}", args.day))
+        for line in read_to_string(format!("../input/day{}", args.day))
             .unwrap()
             .lines()
         {
@@ -61,6 +62,7 @@ fn main() {
         12 => day12::run(input),
         13 => day13::run(input),
         14 => day14::run(input),
+        15 => day15::run(input),
         _ => unimplemented!(),
     };
 
