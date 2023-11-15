@@ -19,15 +19,12 @@ impl Node {
     }
 }
 
-fn parse(input: &Vec<String>) -> (String, HashMap<String, (u32, Vec<String>)>) {
+fn parse(input: &Vec<String>) -> HashMap<String, (u32, Vec<String>)> {
     let mut valves = HashMap::new();
-    let mut start = None;
+
     for line in input {
         let mut v = line.split([' ', ',', ';', '=']);
         let valve = v.nth(1).unwrap().to_string();
-        if start.is_none() {
-            start = Some(valve.clone());
-        }
         let flow_rate = v.nth(3).unwrap().parse::<u32>().unwrap();
 
         let tunnels = v
@@ -42,7 +39,7 @@ fn parse(input: &Vec<String>) -> (String, HashMap<String, (u32, Vec<String>)>) {
             .collect::<Vec<String>>();
         valves.insert(valve, (flow_rate, tunnels));
     }
-    (start.unwrap(), valves)
+    valves
 }
 
 fn find_optimal(
@@ -87,9 +84,6 @@ fn find_optimal(
             p = path_;
         }
     }
-    if p.is_empty() && m == 2048 {
-        dbg!(minute, &visited, &cur);
-    }
 
     let opt_path = format!("{} -> {}", cur.0, p);
 
@@ -101,7 +95,8 @@ pub fn run(input: Vec<String>) -> String {
 }
 
 fn run_part1(input: &Vec<String>) -> String {
-    let (start, parsed) = parse(input);
+    let start = "AA".to_string();
+    let parsed = parse(input);
     let nodes_of_value = parsed
         .iter()
         .filter_map(|(k, (flow, _))| {
@@ -162,7 +157,7 @@ fn run_part1(input: &Vec<String>) -> String {
 }
 
 fn run_part2(input: &Vec<String>) -> String {
-    let (start, parsed) = parse(input);
+    let parsed = parse(input);
     "".to_string()
 }
 
@@ -183,7 +178,57 @@ fn test_part1() {
     ];
     assert_eq!(answer, run_part1(&input));
 }
+/*
+#[test]
+fn test_part1_2() {
+    let answer =
+        "2640 Path: AA -> FA -> GA -> HA -> IA -> JA -> KA -> LA -> MA -> NA -> OA -> PA -> "
+            .to_string();
+    let input = vec![
+        "Valve LA has flow rate=22; tunnels lead to valves KA, MA".to_string(),
+        "Valve MA has flow rate=24; tunnels lead to valves LA, NA".to_string(),
+        "Valve NA has flow rate=26; tunnels lead to valves MA, OA".to_string(),
+        "Valve OA has flow rate=28; tunnels lead to valves NA, PA".to_string(),
+        "Valve PA has flow rate=30; tunnels lead to valves OA".to_string(),
+        "Valve AA has flow rate=0; tunnels lead to valves BA".to_string(),
+        "Valve BA has flow rate=2; tunnels lead to valves AA, CA".to_string(),
+        "Valve CA has flow rate=4; tunnels lead to valves BA, DA".to_string(),
+        "Valve DA has flow rate=6; tunnels lead to valves CA, EA".to_string(),
+        "Valve EA has flow rate=8; tunnels lead to valves DA, FA".to_string(),
+        "Valve FA has flow rate=10; tunnels lead to valves EA, GA".to_string(),
+        "Valve GA has flow rate=12; tunnels lead to valves FA, HA".to_string(),
+        "Valve HA has flow rate=14; tunnels lead to valves GA, IA".to_string(),
+        "Valve IA has flow rate=16; tunnels lead to valves HA, JA".to_string(),
+        "Valve JA has flow rate=18; tunnels lead to valves IA, KA".to_string(),
+        "Valve KA has flow rate=20; tunnels lead to valves JA, LA".to_string(),
+    ];
+    assert_eq!(answer, run_part1(&input))
+}
 
+#[test]
+fn test_part1_3() {
+    let answer = "13468 AA -> IA -> JA -> KA -> LA -> MA -> NA -> OA -> PA".to_string();
+    let input = vec![
+        "Valve AA has flow rate=0; tunnels lead to valves BA".to_string(),
+        "Valve BA has flow rate=1; tunnels lead to valves AA, CA".to_string(),
+        "Valve CA has flow rate=4; tunnels lead to valves BA, DA".to_string(),
+        "Valve DA has flow rate=9; tunnels lead to valves CA, EA".to_string(),
+        "Valve EA has flow rate=16; tunnels lead to valves DA, FA".to_string(),
+        "Valve FA has flow rate=25; tunnels lead to valves EA, GA".to_string(),
+        "Valve GA has flow rate=36; tunnels lead to valves FA, HA".to_string(),
+        "Valve HA has flow rate=49; tunnels lead to valves GA, IA".to_string(),
+        "Valve IA has flow rate=64; tunnels lead to valves HA, JA".to_string(),
+        "Valve JA has flow rate=81; tunnels lead to valves IA, KA".to_string(),
+        "Valve KA has flow rate=100; tunnels lead to valves JA, LA".to_string(),
+        "Valve LA has flow rate=121; tunnels lead to valves KA, MA".to_string(),
+        "Valve MA has flow rate=144; tunnels lead to valves LA, NA".to_string(),
+        "Valve NA has flow rate=169; tunnels lead to valves MA, OA".to_string(),
+        "Valve OA has flow rate=196; tunnels lead to valves NA, PA".to_string(),
+        "Valve PA has flow rate=225; tunnels lead to valves OA".to_string(),
+    ];
+    assert_eq!(answer, run_part1(&input));
+}
+*/
 #[test]
 fn test_part2() {
     let answer = "".to_string();
