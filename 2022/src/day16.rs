@@ -1,6 +1,5 @@
 use pathfinding::prelude::dijkstra;
-use std::cmp::min;
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 #[derive(Clone, Debug, Eq, PartialEq, Hash, Ord, PartialOrd)]
 struct Node {
@@ -42,73 +41,19 @@ fn parse(input: &Vec<String>) -> HashMap<String, (u32, Vec<String>)> {
     valves
 }
 
-fn find_optimal(
-    start: &String,
-    nodes: &HashMap<String, (String, u32, Vec<(String, u32)>)>,
-    cur: (String, u32, Vec<(String, u32)>),
-    visited: &mut HashMap<String, u32>,
-    score: u32,
-    minute: u32,
-) -> (u32, String) {
-    if minute == 30 || cur.2.len() == visited.len() {
-        return (
-            score + (visited.values().sum::<u32>() * (30 - minute)),
-            cur.0,
-        );
-    }
-    let mut m = u32::MIN;
-    let mut p = "".to_string();
-
-    for (valve, dist) in cur.2.iter() {
-        if valve == start || visited.contains_key(valve) {
-            continue;
-        }
-
-        let mut s = score + visited.values().sum::<u32>() * min(dist + 1, 30 - minute);
-        let mut path_ = "".to_string();
-        if (minute + dist + 1) <= 30 {
-            visited.insert(valve.clone(), nodes.get(valve).unwrap().1);
-
-            (s, path_) = find_optimal(
-                start,
-                nodes,
-                nodes.get(valve).unwrap().clone(),
-                visited,
-                s,
-                minute + dist + 1,
-            );
-            visited.remove(valve);
-        }
-        if s > m {
-            m = s;
-            p = path_;
-        }
-    }
-
-    let opt_path = format!("{} -> {}", cur.0, p);
-
-    (m, opt_path)
-}
-
-pub fn run(input: Vec<String>) -> String {
-    format!("{}\n{}", run_part1(&input), run_part2(&input))
-}
-
-fn run_part1(input: &Vec<String>) -> String {
-    let start = "AA".to_string();
-    let parsed = parse(input);
+fn get_reduced_net(
+    parsed: HashMap<String, (u32, Vec<String>)>,
+) -> HashMap<String, (String, u32, Vec<(String, u32)>)> {
     let nodes_of_value = parsed
         .iter()
         .filter_map(|(k, (flow, _))| {
-            if *flow == 0 && *k != start {
+            if *flow == 0 && *k != "AA" {
                 None
             } else {
                 Some(k.clone())
             }
         })
         .collect::<Vec<String>>();
-
-    // perform dijkstra
     let x = {
         let nodes = parsed
             .iter()
@@ -142,28 +87,143 @@ fn run_part1(input: &Vec<String>) -> String {
 
         res
     };
-
-    let mut visited = HashMap::new();
-    let (r, opt_path) = find_optimal(
-        &start,
-        &x,
-        x.get(&start).unwrap().clone(),
-        &mut visited,
-        0,
-        0,
-    );
-
-    format!("{} Path: {}", r, opt_path)
+    x
 }
 
-fn run_part2(input: &Vec<String>) -> String {
+fn get_combinations_within_time(
+    pos: (String, u32, Vec<(String, u32)>),
+    unvisited: &mut HashSet<String>,
+    nodes: &HashMap<String, (String, u32, Vec<(String, u32)>)>,
+    time_left: i32,
+) -> HashSet<Vec<String>> {
+    let mut res = HashSet::new();
+
+    if time_left <= 0 {
+        res.insert(Vec::new());
+    } else {
+        for (next, dist) in pos.2 {
+            if !unvisited.contains(&next) {
+                continue;
+            }
+            unvisited.remove(&next);
+            get_combinations_within_time(
+                nodes.get(&next).unwrap().clone(),
+                unvisited,
+                nodes,
+                time_left - dist as i32 - 1,
+            )
+            .into_iter()
+            .for_each(|mut v| {
+                let mut a = vec![pos.0.clone()];
+                a.append(&mut v);
+                res.insert(a);
+            });
+            unvisited.insert(next);
+        }
+        res.insert(vec![pos.0.clone()]);
+    }
+
+    res
+}
+
+fn get_score_of_path(
+    path: Vec<String>,
+    nodes: &HashMap<String, (String, u32, Vec<(String, u32)>)>,
+    limit: u32,
+    memoise: &mut HashMap<Vec<String>, u32>,
+) -> u32 {
+    let mut minute = 0;
+    let mut score = 0;
+
+    let mut iter = path.iter();
+    let mut cur = nodes.get(iter.next().unwrap()).unwrap();
+    let mut done = vec![cur.0.clone()];
+
+    for n in iter {
+        let (_, dist) = cur.2[cur.2.iter().position(|(x, _)| x == n).unwrap()];
+        cur = nodes.get(n).unwrap();
+        done.push(cur.0.clone());
+        score += (limit - minute - dist - 1) * cur.1;
+        memoise.insert(done.clone(), score);
+        minute += dist + 1;
+    }
+
+    score
+}
+
+pub fn run(input: Vec<String>) -> String {
+    let mut memoise = HashMap::new();
+    format!(
+        "{}\n{}",
+        run_part1(&input, &mut memoise),
+        run_part2(&input, &mut memoise)
+    )
+}
+
+fn run_part1(input: &Vec<String>, memoise: &mut HashMap<Vec<String>, u32>) -> String {
+    let start = "AA".to_string();
     let parsed = parse(input);
-    "".to_string()
+
+    // perform dijkstra
+    let x = get_reduced_net(parsed);
+
+    let mut unvisited = x.keys().cloned().collect::<HashSet<String>>();
+    unvisited.insert("AA".to_string());
+    let possible_combinations =
+        get_combinations_within_time(x.get(&start).unwrap().clone(), &mut unvisited, &x, 30);
+
+    //let (r, opt_path) = find_optimal(&x, x.get(&start).unwrap().clone(), &mut unvisited, 0, 0, 30);
+
+    //   let opt_path_string = opt_path
+    //       .into_iter()
+    //       .reduce(|a, b| format!("{} -> {}", a, b))
+    //       .unwrap();
+    // format!("{} Path: {}", r, opt_path_string)
+    possible_combinations
+        .into_iter()
+        .map(|path| get_score_of_path(path, &x, 30, memoise))
+        .max()
+        .unwrap()
+        .to_string()
+}
+
+fn run_part2(input: &Vec<String>, memoise: &mut HashMap<Vec<String>, u32>) -> String {
+    let parsed = parse(input);
+    let x = get_reduced_net(parsed);
+
+    let mut ccs = get_combinations_within_time(
+        x.get(&"AA".to_string()).unwrap().clone(),
+        &mut x.keys().cloned().collect(),
+        &x,
+        26,
+    );
+    ccs.remove(&vec!["AA".to_string()]);
+
+    ccs.iter().for_each(|path| {
+        get_score_of_path(path.clone(), &x, 26, memoise);
+    });
+
+    let mut max_val = u32::MIN;
+    for h_path in ccs.iter() {
+        let h_max = memoise.get(h_path).unwrap();
+        let e_paths = ccs
+            .iter()
+            .filter(|p| p.iter().all(|e| !h_path.contains(e) || e == "AA"));
+
+        for e_path in e_paths {
+            let e_max = memoise.get(e_path).unwrap();
+            if max_val < *h_max + *e_max {
+                max_val = *h_max + *e_max;
+            }
+        }
+    }
+
+    max_val.to_string()
 }
 
 #[test]
 fn test_part1() {
-    let answer = "1651 Path: AA -> DD -> BB -> JJ -> HH -> EE -> CC".to_string();
+    let answer = "1651".to_string();
     let input: Vec<String> = vec![
         "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB".to_string(),
         "Valve BB has flow rate=13; tunnels lead to valves CC, AA".to_string(),
@@ -176,7 +236,7 @@ fn test_part1() {
         "Valve II has flow rate=0; tunnels lead to valves AA, JJ".to_string(),
         "Valve JJ has flow rate=21; tunnel leads to valve II".to_string(),
     ];
-    assert_eq!(answer, run_part1(&input));
+    assert_eq!(answer, run_part1(&input, &mut HashMap::new()));
 }
 /*
 #[test]
@@ -231,7 +291,7 @@ fn test_part1_3() {
 */
 #[test]
 fn test_part2() {
-    let answer = "".to_string();
+    let answer = "1707".to_string();
     let input: Vec<String> = vec![
         "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB".to_string(),
         "Valve BB has flow rate=13; tunnels lead to valves CC, AA".to_string(),
@@ -244,5 +304,5 @@ fn test_part2() {
         "Valve II has flow rate=0; tunnels lead to valves AA, JJ".to_string(),
         "Valve JJ has flow rate=21; tunnel leads to valve II".to_string(),
     ];
-    assert_eq!(answer, run_part2(&input));
+    assert_eq!(answer, run_part2(&input, &mut HashMap::new()));
 }
