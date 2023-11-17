@@ -1,6 +1,6 @@
-fn parse(input: Vec<String>) -> Vec<Option<i32>> {
+fn parse(input: &str) -> Vec<Option<i32>> {
     let mut res = Vec::new();
-    for line in input {
+    for line in input.lines() {
         if line == "noop" {
             res.push(None);
         } else {
@@ -11,7 +11,7 @@ fn parse(input: Vec<String>) -> Vec<Option<i32>> {
     res
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let cycles = parse(input);
 
     let mut output = Vec::new();
@@ -37,154 +37,152 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "RUAKHBEK".to_string();
-    let input = vec![
-        "addx 15".to_string(),
-        "addx -11".to_string(),
-        "addx 6".to_string(),
-        "addx -3".to_string(),
-        "addx 5".to_string(),
-        "addx -1".to_string(),
-        "addx -8".to_string(),
-        "addx 13".to_string(),
-        "addx 4".to_string(),
-        "noop".to_string(),
-        "addx -1".to_string(),
-        "addx 5".to_string(),
-        "addx -1".to_string(),
-        "addx 5".to_string(),
-        "addx -1".to_string(),
-        "addx 5".to_string(),
-        "addx -1".to_string(),
-        "addx 5".to_string(),
-        "addx -1".to_string(),
-        "addx -35".to_string(),
-        "addx 1".to_string(),
-        "addx 24".to_string(),
-        "addx -19".to_string(),
-        "addx 1".to_string(),
-        "addx 16".to_string(),
-        "addx -11".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 21".to_string(),
-        "addx -15".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx -3".to_string(),
-        "addx 9".to_string(),
-        "addx 1".to_string(),
-        "addx -3".to_string(),
-        "addx 8".to_string(),
-        "addx 1".to_string(),
-        "addx 5".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx -36".to_string(),
-        "noop".to_string(),
-        "addx 1".to_string(),
-        "addx 7".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 2".to_string(),
-        "addx 6".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 1".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 7".to_string(),
-        "addx 1".to_string(),
-        "noop".to_string(),
-        "addx -13".to_string(),
-        "addx 13".to_string(),
-        "addx 7".to_string(),
-        "noop".to_string(),
-        "addx 1".to_string(),
-        "addx -33".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 2".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 8".to_string(),
-        "noop".to_string(),
-        "addx -1".to_string(),
-        "addx 2".to_string(),
-        "addx 1".to_string(),
-        "noop".to_string(),
-        "addx 17".to_string(),
-        "addx -9".to_string(),
-        "addx 1".to_string(),
-        "addx 1".to_string(),
-        "addx -3".to_string(),
-        "addx 11".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 1".to_string(),
-        "noop".to_string(),
-        "addx 1".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx -13".to_string(),
-        "addx -19".to_string(),
-        "addx 1".to_string(),
-        "addx 3".to_string(),
-        "addx 26".to_string(),
-        "addx -30".to_string(),
-        "addx 12".to_string(),
-        "addx -1".to_string(),
-        "addx 3".to_string(),
-        "addx 1".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx -9".to_string(),
-        "addx 18".to_string(),
-        "addx 1".to_string(),
-        "addx 2".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 9".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx -1".to_string(),
-        "addx 2".to_string(),
-        "addx -37".to_string(),
-        "addx 1".to_string(),
-        "addx 3".to_string(),
-        "noop".to_string(),
-        "addx 15".to_string(),
-        "addx -21".to_string(),
-        "addx 22".to_string(),
-        "addx -6".to_string(),
-        "addx 1".to_string(),
-        "noop".to_string(),
-        "addx 2".to_string(),
-        "addx 1".to_string(),
-        "noop".to_string(),
-        "addx -10".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "addx 20".to_string(),
-        "addx 1".to_string(),
-        "addx 2".to_string(),
-        "addx 2".to_string(),
-        "addx -6".to_string(),
-        "addx -11".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-        "noop".to_string(),
-    ];
+    let input = "addx 15
+addx -11
+addx 6
+addx -3
+addx 5
+addx -1
+addx -8
+addx 13
+addx 4
+noop
+addx -1
+addx 5
+addx -1
+addx 5
+addx -1
+addx 5
+addx -1
+addx 5
+addx -1
+addx -35
+addx 1
+addx 24
+addx -19
+addx 1
+addx 16
+addx -11
+noop
+noop
+addx 21
+addx -15
+noop
+noop
+addx -3
+addx 9
+addx 1
+addx -3
+addx 8
+addx 1
+addx 5
+noop
+noop
+noop
+noop
+noop
+addx -36
+noop
+addx 1
+addx 7
+noop
+noop
+noop
+addx 2
+addx 6
+noop
+noop
+noop
+noop
+noop
+addx 1
+noop
+noop
+addx 7
+addx 1
+noop
+addx -13
+addx 13
+addx 7
+noop
+addx 1
+addx -33
+noop
+noop
+noop
+addx 2
+noop
+noop
+noop
+addx 8
+noop
+addx -1
+addx 2
+addx 1
+noop
+addx 17
+addx -9
+addx 1
+addx 1
+addx -3
+addx 11
+noop
+noop
+addx 1
+noop
+addx 1
+noop
+noop
+addx -13
+addx -19
+addx 1
+addx 3
+addx 26
+addx -30
+addx 12
+addx -1
+addx 3
+addx 1
+noop
+noop
+noop
+addx -9
+addx 18
+addx 1
+addx 2
+noop
+noop
+addx 9
+noop
+noop
+noop
+addx -1
+addx 2
+addx -37
+addx 1
+addx 3
+noop
+addx 15
+addx -21
+addx 22
+addx -6
+addx 1
+noop
+addx 2
+addx 1
+noop
+addx -10
+noop
+noop
+addx 20
+addx 1
+addx 2
+addx 2
+addx -6
+addx -11
+noop
+noop
+noop";
 
     assert_eq!(answer, run(input));
 }

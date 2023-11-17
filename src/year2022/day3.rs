@@ -9,11 +9,11 @@ fn priority(item: char) -> i32 {
     }) as i32
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let mut items = Vec::new();
     let mut common = HashMap::new();
 
-    for (j, rucksack) in input.iter().enumerate() {
+    for (j, rucksack) in input.lines().enumerate() {
         if j % 3 == 0 {
             common = HashMap::new();
         }
@@ -57,13 +57,11 @@ fn test_priority() {
 #[test]
 fn test() {
     let answer = "70".to_string();
-    let input = vec![
-        "vJrwpWtwJgWrhcsFMMfFFhFp".to_string(),
-        "jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL".to_string(),
-        "PmmdzqPrVvPwwTWBwg".to_string(),
-        "wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn".to_string(),
-        "ttgJtRGJQctTZtZT".to_string(),
-        "CrZsJsPPZsGzwwsLwLmpwMDw".to_string(),
-    ];
+    let input = "vJrwpWtwJgWrhcsFMMfFFhFpn
+jqHRNqRjqzjGDLGLrsFMfFZSrLrFZsSL
+PmmdzqPrVvPwwTWBwg
+wMqvLMZHhHMvwLHjbvcjnnSBnvTQFn
+ttgJtRGJQctTZtZT
+CrZsJsPPZsGzwwsLwLmpwMDw";
     assert_eq!(answer, run(input));
 }

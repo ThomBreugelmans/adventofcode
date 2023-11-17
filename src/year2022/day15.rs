@@ -32,8 +32,8 @@ fn manhattan(a: (i32, i32), b: (i32, i32)) -> i32 {
     (max(a.0, b.0) - min(a.0, b.0)).abs() + (max(a.1, b.1) - min(a.1, b.1)).abs()
 }
 
-fn parse(input: &Vec<String>) -> Vec<((i32, i32), (i32, i32))> {
-    let iter = input.iter();
+fn parse(input: &str) -> Vec<((i32, i32), (i32, i32))> {
+    let iter = input.lines();
     iter.map(|i| {
         i.split(", ")
             .flat_map(|ii| ii.split(':').map(|iii| iii.split('=')))
@@ -95,15 +95,15 @@ fn create_segments(input: Vec<((i32, i32), (i32, i32))>) -> HashMap<i32, Vec<Seg
     segments
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     format!(
-        "{}\n{}",
-        run_part1(&input, 2_000_000),
-        run_part2(&input, 4_000_000)
+        "  Part 1: {}\n  Part 2: {}",
+        run_part1(input, 2_000_000),
+        run_part2(input, 4_000_000)
     )
 }
 
-fn run_part1(input: &Vec<String>, line: i32) -> String {
+fn run_part1(input: &str, line: i32) -> String {
     let parsed = parse(input);
 
     // the lines are / and \ with the bottom point on the line of the sensor
@@ -125,7 +125,7 @@ fn run_part1(input: &Vec<String>, line: i32) -> String {
     count.to_string()
 }
 
-fn run_part2(input: &Vec<String>, limit: i32) -> String {
+fn run_part2(input: &str, limit: i32) -> String {
     let parsed = parse(input);
 
     let segments = create_segments(parsed);
@@ -167,43 +167,39 @@ fn run_part2(input: &Vec<String>, limit: i32) -> String {
 #[test]
 fn test_part1() {
     let answer = "26".to_string();
-    let input = vec![
-        "Sensor at x=2, y=18: closest beacon is at x=-2, y=15".to_string(),
-        "Sensor at x=9, y=16: closest beacon is at x=10, y=16".to_string(),
-        "Sensor at x=13, y=2: closest beacon is at x=15, y=3".to_string(),
-        "Sensor at x=12, y=14: closest beacon is at x=10, y=16".to_string(),
-        "Sensor at x=10, y=20: closest beacon is at x=10, y=16".to_string(),
-        "Sensor at x=14, y=17: closest beacon is at x=10, y=16".to_string(),
-        "Sensor at x=8, y=7: closest beacon is at x=2, y=10".to_string(),
-        "Sensor at x=2, y=0: clopsest beacon is at x=2, y=10".to_string(),
-        "Sensor at x=0, y=11: closest beacon is at x=2, y=10".to_string(),
-        "Sensor at x=20, y=14: closest beacon is at x=25, y=17".to_string(),
-        "Sensor at x=17, y=20: closest beacon is at x=21, y=22".to_string(),
-        "Sensor at x=16, y=7: closest beacon is at x=15, y=3".to_string(),
-        "Sensor at x=14, y=3: closest beacon is at x=15, y=3".to_string(),
-        "Sensor at x=20, y=1: closest beacon is at x=15, y=3".to_string(),
-    ];
-    assert_eq!(answer, run_part1(&input, 10))
+    let input = "Sensor at x=2, y=18: closest beacon is at x=-2, y=15
+Sensor at x=9, y=16: closest beacon is at x=10, y=16
+Sensor at x=13, y=2: closest beacon is at x=15, y=3
+Sensor at x=12, y=14: closest beacon is at x=10, y=16
+Sensor at x=10, y=20: closest beacon is at x=10, y=16
+Sensor at x=14, y=17: closest beacon is at x=10, y=16
+Sensor at x=8, y=7: closest beacon is at x=2, y=10
+Sensor at x=2, y=0: clopsest beacon is at x=2, y=10
+Sensor at x=0, y=11: closest beacon is at x=2, y=10
+Sensor at x=20, y=14: closest beacon is at x=25, y=17
+Sensor at x=17, y=20: closest beacon is at x=21, y=22
+Sensor at x=16, y=7: closest beacon is at x=15, y=3
+Sensor at x=14, y=3: closest beacon is at x=15, y=3
+Sensor at x=20, y=1: closest beacon is at x=15, y=3";
+    assert_eq!(answer, run_part1(input, 10))
 }
 
 #[test]
 fn test_part2() {
     let answer = "56000011".to_string();
-    let input = vec![
-        "Sensor at x=2, y=18: closest beacon is at x=-2, y=15".to_string(),
-        "Sensor at x=9, y=16: closest beacon is at x=10, y=16".to_string(),
-        "Sensor at x=13, y=2: closest beacon is at x=15, y=3".to_string(),
-        "Sensor at x=12, y=14: closest beacon is at x=10, y=16".to_string(),
-        "Sensor at x=10, y=20: closest beacon is at x=10, y=16".to_string(),
-        "Sensor at x=14, y=17: closest beacon is at x=10, y=16".to_string(),
-        "Sensor at x=8, y=7: closest beacon is at x=2, y=10".to_string(),
-        "Sensor at x=2, y=0: clopsest beacon is at x=2, y=10".to_string(),
-        "Sensor at x=0, y=11: closest beacon is at x=2, y=10".to_string(),
-        "Sensor at x=20, y=14: closest beacon is at x=25, y=17".to_string(),
-        "Sensor at x=17, y=20: closest beacon is at x=21, y=22".to_string(),
-        "Sensor at x=16, y=7: closest beacon is at x=15, y=3".to_string(),
-        "Sensor at x=14, y=3: closest beacon is at x=15, y=3".to_string(),
-        "Sensor at x=20, y=1: closest beacon is at x=15, y=3".to_string(),
-    ];
-    assert_eq!(answer, run_part2(&input, 20))
+    let input = "Sensor at x=2, y=18: closest beacon is at x=-2, y=15
+Sensor at x=9, y=16: closest beacon is at x=10, y=16
+Sensor at x=13, y=2: closest beacon is at x=15, y=3
+Sensor at x=12, y=14: closest beacon is at x=10, y=16
+Sensor at x=10, y=20: closest beacon is at x=10, y=16
+Sensor at x=14, y=17: closest beacon is at x=10, y=16
+Sensor at x=8, y=7: closest beacon is at x=2, y=10
+Sensor at x=2, y=0: clopsest beacon is at x=2, y=10
+Sensor at x=0, y=11: closest beacon is at x=2, y=10
+Sensor at x=20, y=14: closest beacon is at x=25, y=17
+Sensor at x=17, y=20: closest beacon is at x=21, y=22
+Sensor at x=16, y=7: closest beacon is at x=15, y=3
+Sensor at x=14, y=3: closest beacon is at x=15, y=3
+Sensor at x=20, y=1: closest beacon is at x=15, y=3";
+    assert_eq!(answer, run_part2(input, 20))
 }

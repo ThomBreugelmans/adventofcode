@@ -9,10 +9,10 @@ struct Monkey {
     false_monkey: usize,
 }
 
-fn parse(input: Vec<String>) -> Vec<Monkey> {
+fn parse(input: &str) -> Vec<Monkey> {
     let mut monkeys = Vec::new();
 
-    let mut inp_iter = input.iter();
+    let mut inp_iter = input.lines();
     while let Some(_) = inp_iter.next() {
         let items = inp_iter
             .next()
@@ -61,7 +61,7 @@ fn parse(input: Vec<String>) -> Vec<Monkey> {
     monkeys
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let mut monkeys = parse(input);
 
     let modulo = monkeys.iter().map(|m| m.div_by).product::<u64>();
@@ -106,36 +106,35 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "2713310158".to_string();
-    let input = vec![
-        "Monkey 0:".to_string(),
-        "  Starting items: 79, 98".to_string(),
-        "  Operation: new = old * 19".to_string(),
-        "  Test: divisible by 23".to_string(),
-        "    If true: throw to monkey 2".to_string(),
-        "    If false: throw to monkey 3".to_string(),
-        "".to_string(),
-        "Monkey 1:".to_string(),
-        "  Starting items: 54, 65, 75, 74".to_string(),
-        "  Operation: new = old + 6".to_string(),
-        "  Test: divisible by 19".to_string(),
-        "    If true: throw to monkey 2".to_string(),
-        "    If false: throw to monkey 0".to_string(),
-        "".to_string(),
-        "Monkey 2:".to_string(),
-        "  Starting items: 79, 60, 97".to_string(),
-        "  Operation: new = old * old".to_string(),
-        "  Test: divisible by 13".to_string(),
-        "    If true: throw to monkey 1".to_string(),
-        "    If false: throw to monkey 3".to_string(),
-        "".to_string(),
-        "Monkey 3:".to_string(),
-        "  Starting items: 74".to_string(),
-        "  Operation: new = old + 3".to_string(),
-        "  Test: divisible by 17".to_string(),
-        "    If true: throw to monkey 0".to_string(),
-        "    If false: throw to monkey 1".to_string(),
-        "".to_string(),
-    ];
+    let input = "Monkey 0:
+  Starting items: 79, 98
+  Operation: new = old * 19
+  Test: divisible by 23
+    If true: throw to monkey 2
+    If false: throw to monkey 3
+
+Monkey 1:
+  Starting items: 54, 65, 75, 74
+  Operation: new = old + 6
+  Test: divisible by 19
+    If true: throw to monkey 2
+    If false: throw to monkey 0
+
+Monkey 2:
+  Starting items: 79, 60, 97
+  Operation: new = old * old
+  Test: divisible by 13
+    If true: throw to monkey 1
+    If false: throw to monkey 3
+
+Monkey 3:
+  Starting items: 74
+  Operation: new = old + 3
+  Test: divisible by 17
+    If true: throw to monkey 0
+    If false: throw to monkey 1
+
+";
 
     assert_eq!(answer, run(input));
 }

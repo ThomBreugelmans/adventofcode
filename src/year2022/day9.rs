@@ -8,9 +8,9 @@ enum Direction {
     Right,
 }
 
-fn parse(input: Vec<String>) -> Vec<Direction> {
+fn parse(input: &str) -> Vec<Direction> {
     let mut actions = Vec::new();
-    for line in input {
+    for line in input.lines() {
         match line.get(0..1) {
             Some("U") => {
                 for _ in 0..line.get(2..).unwrap().parse::<i32>().unwrap() {
@@ -45,7 +45,7 @@ struct Node {
     y: i32,
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let directions = parse(input);
     let mut rope: [Node; 10] = [
         Node { x: 0, y: 0 },
@@ -110,16 +110,14 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "36".to_string();
-    let input = vec![
-        "R 5".to_string(),
-        "U 8".to_string(),
-        "L 8".to_string(),
-        "D 3".to_string(),
-        "R 17".to_string(),
-        "D 10".to_string(),
-        "L 25".to_string(),
-        "U 20".to_string(),
-    ];
+    let input = "R 5
+U 8
+L 8
+D 3
+R 17
+D 10
+L 25
+U 20";
 
     assert_eq!(answer, run(input));
 }

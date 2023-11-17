@@ -1,38 +1,33 @@
-mod day1;
-mod day10;
-mod day11;
-mod day12;
-mod day13;
-mod day14;
-mod day15;
-mod day16;
-mod day2;
-mod day3;
-mod day4;
-mod day5;
-mod day6;
-mod day7;
-mod day8;
-mod day9;
+use aoc::solution;
+use aoc::utils::solution::*;
 
-pub fn run(input: Vec<String>, day: u8) -> String {
+pub fn run(day: u8) -> Solution {
     match day {
-        1 => day1::run(input),
-        2 => day2::run(input),
-        3 => day3::run(input),
-        4 => day4::run(input),
-        5 => day5::run(input),
-        6 => day6::run(input),
-        7 => day7::run(input),
-        8 => day8::run(input),
-        9 => day9::run(input),
-        10 => day10::run(input),
-        11 => day11::run(input),
-        12 => day12::run(input),
-        13 => day13::run(input),
-        14 => day14::run(input),
-        15 => day15::run(input),
-        16 => day16::run(input),
-        _ => "[E] Unknown day...".to_string(),
+        1 => solution!(year2022, day1),
+        2 => solution!(year2022, day2),
+        3 => solution!(year2022, day3),
+        4 => solution!(year2022, day4),
+        5 => solution!(year2022, day5),
+        6 => solution!(year2022, day6),
+        7 => solution!(year2022, day7),
+        8 => solution!(year2022, day8),
+        9 => solution!(year2022, day9),
+        10 => solution!(year2022, day10),
+        11 => solution!(year2022, day11),
+        12 => solution!(year2022, day12),
+        13 => solution!(year2022, day13),
+        14 => solution!(year2022, day14),
+        15 => solution!(year2022, day15),
+        16 => solution!(year2022, day16),
+        17 => solution!(year2022, day17),
+        18 => solution!(year2022, day18),
+        19 => solution!(year2022, day19),
+        20 => solution!(year2022, day20),
+        21 => solution!(year2022, day21),
+        22 => solution!(year2022, day22),
+        23 => solution!(year2022, day23),
+        24 => solution!(year2022, day24),
+        25 => solution!(year2022, day25),
+        _ => panic!("[E] Unknown day..."),
     }
 }
