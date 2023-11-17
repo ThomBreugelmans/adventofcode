@@ -7,9 +7,9 @@ fn score(opponent: i8, you: i8) -> i32 {
     }
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let mut rounds = Vec::new();
-    for round in input {
+    for round in input.lines() {
         let mut chars = round.chars();
         rounds.push((
             chars.nth(0).unwrap() as i8 - b'A' as i8,
@@ -45,6 +45,8 @@ fn test_scores() {
 #[test]
 fn test() {
     let answer = "12".to_string();
-    let input = vec!["A Y".to_string(), "B X".to_string(), "C Z".to_string()];
+    let input = "A Y
+B X
+C Z";
     assert_eq!(answer, run(input));
 }

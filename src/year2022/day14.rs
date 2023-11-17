@@ -1,10 +1,10 @@
 use std::cmp::{max, min};
 use std::collections::HashSet;
 
-fn parse(input: Vec<String>) -> (HashSet<(i32, i32)>, i32) {
+fn parse(input: &str) -> (HashSet<(i32, i32)>, i32) {
     let mut h = HashSet::new();
     let mut lowest = i32::MIN;
-    for line in input {
+    for line in input.lines() {
         let iter = line.split(" -> ");
         let lines = iter
             .map(|a| {
@@ -33,7 +33,7 @@ fn parse(input: Vec<String>) -> (HashSet<(i32, i32)>, i32) {
     (h, lowest)
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let (rocks, lowest) = parse(input);
     let mut sands = HashSet::<(i32, i32)>::new();
 
@@ -65,9 +65,7 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "93".to_string();
-    let input = vec![
-        "498,4 -> 498,6 -> 496,6".to_string(),
-        "503,4 -> 502,4 -> 502,9 -> 494,9".to_string(),
-    ];
+    let input = "498,4 -> 498,6 -> 496,6
+503,4 -> 502,4 -> 502,9 -> 494,9";
     assert_eq!(answer, run(input));
 }

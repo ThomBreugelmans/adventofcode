@@ -18,10 +18,10 @@ impl Node {
     }
 }
 
-fn parse(input: &Vec<String>) -> HashMap<String, (u32, Vec<String>)> {
+fn parse(input: &str) -> HashMap<String, (u32, Vec<String>)> {
     let mut valves = HashMap::new();
 
-    for line in input {
+    for line in input.lines() {
         let mut v = line.split([' ', ',', ';', '=']);
         let valve = v.nth(1).unwrap().to_string();
         let flow_rate = v.nth(3).unwrap().parse::<u32>().unwrap();
@@ -151,16 +151,16 @@ fn get_score_of_path(
     score
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let mut memoise = HashMap::new();
     format!(
-        "{}\n{}",
-        run_part1(&input, &mut memoise),
-        run_part2(&input, &mut memoise)
+        "  Part 1: {}\n  Part 2: {}",
+        run_part1(input, &mut memoise),
+        run_part2(input, &mut memoise)
     )
 }
 
-fn run_part1(input: &Vec<String>, memoise: &mut HashMap<Vec<String>, u32>) -> String {
+fn run_part1(input: &str, memoise: &mut HashMap<Vec<String>, u32>) -> String {
     let start = "AA".to_string();
     let parsed = parse(input);
 
@@ -187,7 +187,7 @@ fn run_part1(input: &Vec<String>, memoise: &mut HashMap<Vec<String>, u32>) -> St
         .to_string()
 }
 
-fn run_part2(input: &Vec<String>, memoise: &mut HashMap<Vec<String>, u32>) -> String {
+fn run_part2(input: &str, memoise: &mut HashMap<Vec<String>, u32>) -> String {
     let parsed = parse(input);
     let x = get_reduced_net(parsed);
 
@@ -224,85 +224,31 @@ fn run_part2(input: &Vec<String>, memoise: &mut HashMap<Vec<String>, u32>) -> St
 #[test]
 fn test_part1() {
     let answer = "1651".to_string();
-    let input: Vec<String> = vec![
-        "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB".to_string(),
-        "Valve BB has flow rate=13; tunnels lead to valves CC, AA".to_string(),
-        "Valve CC has flow rate=2; tunnels lead to valves DD, BB".to_string(),
-        "Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE".to_string(),
-        "Valve EE has flow rate=3; tunnels lead to valves FF, DD".to_string(),
-        "Valve FF has flow rate=0; tunnels lead to valves EE, GG".to_string(),
-        "Valve GG has flow rate=0; tunnels lead to valves FF, HH".to_string(),
-        "Valve HH has flow rate=22; tunnel leads to valve GG".to_string(),
-        "Valve II has flow rate=0; tunnels lead to valves AA, JJ".to_string(),
-        "Valve JJ has flow rate=21; tunnel leads to valve II".to_string(),
-    ];
-    assert_eq!(answer, run_part1(&input, &mut HashMap::new()));
-}
-/*
-#[test]
-fn test_part1_2() {
-    let answer =
-        "2640 Path: AA -> FA -> GA -> HA -> IA -> JA -> KA -> LA -> MA -> NA -> OA -> PA -> "
-            .to_string();
-    let input = vec![
-        "Valve LA has flow rate=22; tunnels lead to valves KA, MA".to_string(),
-        "Valve MA has flow rate=24; tunnels lead to valves LA, NA".to_string(),
-        "Valve NA has flow rate=26; tunnels lead to valves MA, OA".to_string(),
-        "Valve OA has flow rate=28; tunnels lead to valves NA, PA".to_string(),
-        "Valve PA has flow rate=30; tunnels lead to valves OA".to_string(),
-        "Valve AA has flow rate=0; tunnels lead to valves BA".to_string(),
-        "Valve BA has flow rate=2; tunnels lead to valves AA, CA".to_string(),
-        "Valve CA has flow rate=4; tunnels lead to valves BA, DA".to_string(),
-        "Valve DA has flow rate=6; tunnels lead to valves CA, EA".to_string(),
-        "Valve EA has flow rate=8; tunnels lead to valves DA, FA".to_string(),
-        "Valve FA has flow rate=10; tunnels lead to valves EA, GA".to_string(),
-        "Valve GA has flow rate=12; tunnels lead to valves FA, HA".to_string(),
-        "Valve HA has flow rate=14; tunnels lead to valves GA, IA".to_string(),
-        "Valve IA has flow rate=16; tunnels lead to valves HA, JA".to_string(),
-        "Valve JA has flow rate=18; tunnels lead to valves IA, KA".to_string(),
-        "Valve KA has flow rate=20; tunnels lead to valves JA, LA".to_string(),
-    ];
-    assert_eq!(answer, run_part1(&input))
+    let input = "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
+Valve BB has flow rate=13; tunnels lead to valves CC, AA
+Valve CC has flow rate=2; tunnels lead to valves DD, BB
+Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
+Valve EE has flow rate=3; tunnels lead to valves FF, DD
+Valve FF has flow rate=0; tunnels lead to valves EE, GG
+Valve GG has flow rate=0; tunnels lead to valves FF, HH
+Valve HH has flow rate=22; tunnel leads to valve GG
+Valve II has flow rate=0; tunnels lead to valves AA, JJ
+Valve JJ has flow rate=21; tunnel leads to valve II";
+    assert_eq!(answer, run_part1(input, &mut HashMap::new()));
 }
 
 #[test]
-fn test_part1_3() {
-    let answer = "13468 AA -> IA -> JA -> KA -> LA -> MA -> NA -> OA -> PA".to_string();
-    let input = vec![
-        "Valve AA has flow rate=0; tunnels lead to valves BA".to_string(),
-        "Valve BA has flow rate=1; tunnels lead to valves AA, CA".to_string(),
-        "Valve CA has flow rate=4; tunnels lead to valves BA, DA".to_string(),
-        "Valve DA has flow rate=9; tunnels lead to valves CA, EA".to_string(),
-        "Valve EA has flow rate=16; tunnels lead to valves DA, FA".to_string(),
-        "Valve FA has flow rate=25; tunnels lead to valves EA, GA".to_string(),
-        "Valve GA has flow rate=36; tunnels lead to valves FA, HA".to_string(),
-        "Valve HA has flow rate=49; tunnels lead to valves GA, IA".to_string(),
-        "Valve IA has flow rate=64; tunnels lead to valves HA, JA".to_string(),
-        "Valve JA has flow rate=81; tunnels lead to valves IA, KA".to_string(),
-        "Valve KA has flow rate=100; tunnels lead to valves JA, LA".to_string(),
-        "Valve LA has flow rate=121; tunnels lead to valves KA, MA".to_string(),
-        "Valve MA has flow rate=144; tunnels lead to valves LA, NA".to_string(),
-        "Valve NA has flow rate=169; tunnels lead to valves MA, OA".to_string(),
-        "Valve OA has flow rate=196; tunnels lead to valves NA, PA".to_string(),
-        "Valve PA has flow rate=225; tunnels lead to valves OA".to_string(),
-    ];
-    assert_eq!(answer, run_part1(&input));
-}
-*/
-#[test]
 fn test_part2() {
     let answer = "1707".to_string();
-    let input: Vec<String> = vec![
-        "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB".to_string(),
-        "Valve BB has flow rate=13; tunnels lead to valves CC, AA".to_string(),
-        "Valve CC has flow rate=2; tunnels lead to valves DD, BB".to_string(),
-        "Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE".to_string(),
-        "Valve EE has flow rate=3; tunnels lead to valves FF, DD".to_string(),
-        "Valve FF has flow rate=0; tunnels lead to valves EE, GG".to_string(),
-        "Valve GG has flow rate=0; tunnels lead to valves FF, HH".to_string(),
-        "Valve HH has flow rate=22; tunnel leads to valve GG".to_string(),
-        "Valve II has flow rate=0; tunnels lead to valves AA, JJ".to_string(),
-        "Valve JJ has flow rate=21; tunnel leads to valve II".to_string(),
-    ];
-    assert_eq!(answer, run_part2(&input, &mut HashMap::new()));
+    let input = "Valve AA has flow rate=0; tunnels lead to valves DD, II, BB
+Valve BB has flow rate=13; tunnels lead to valves CC, AA
+Valve CC has flow rate=2; tunnels lead to valves DD, BB
+Valve DD has flow rate=20; tunnels lead to valves CC, AA, EE
+Valve EE has flow rate=3; tunnels lead to valves FF, DD
+Valve FF has flow rate=0; tunnels lead to valves EE, GG
+Valve GG has flow rate=0; tunnels lead to valves FF, HH
+Valve HH has flow rate=22; tunnel leads to valve GG
+Valve II has flow rate=0; tunnels lead to valves AA, JJ
+Valve JJ has flow rate=21; tunnel leads to valve II";
+    assert_eq!(answer, run_part2(input, &mut HashMap::new()));
 }

@@ -117,7 +117,7 @@ fn test_left_and_right(left: &Packet, right: &Packet) -> Option<bool> {
     }
 }
 
-fn parse(input: Vec<String>) -> Vec<(Packet, Packet)> {
+fn parse(input: &str) -> Vec<(Packet, Packet)> {
     fn parse_arrays(input: &mut Chars) -> Packet {
         let mut array = Vec::new();
         loop {
@@ -150,7 +150,7 @@ fn parse(input: Vec<String>) -> Vec<(Packet, Packet)> {
     let mut packets = Vec::new();
 
     let mut packet = (None, None);
-    for line in input {
+    for line in input.lines() {
         if line.is_empty() {
             packets.push((packet.0.unwrap(), packet.1.unwrap()));
             packet = (None, None);
@@ -174,7 +174,7 @@ fn parse(input: Vec<String>) -> Vec<(Packet, Packet)> {
     packets
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let parsed = parse(input);
 
     let mut res = vec![
@@ -219,31 +219,29 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "140".to_string();
-    let input = vec![
-        "[1,1,3,1,1]".to_string(),
-        "[1,1,5,1,1]".to_string(),
-        "".to_string(),
-        "[[1],[2,3,4]]".to_string(),
-        "[[1],4]".to_string(),
-        "".to_string(),
-        "[9]".to_string(),
-        "[[8,7,6]]".to_string(),
-        "".to_string(),
-        "[[4,4],4,4]".to_string(),
-        "[[4,4],4,4,4]".to_string(),
-        "".to_string(),
-        "[7,7,7,7]".to_string(),
-        "[7,7,7]".to_string(),
-        "".to_string(),
-        "[]".to_string(),
-        "[3]".to_string(),
-        "".to_string(),
-        "[[[]]]".to_string(),
-        "[[]]".to_string(),
-        "".to_string(),
-        "[1,[2,[3,[4,[5,6,7]]]],8,9]".to_string(),
-        "[1,[2,[3,[4,[5,6,0]]]],8,9]".to_string(),
-        "".to_string(),
-    ];
+    let input = "[1,1,3,1,1]
+[1,1,5,1,1]
+
+[[1],[2,3,4]]
+[[1],4]
+
+[9]
+[[8,7,6]]
+
+[[4,4],4,4]
+[[4,4],4,4,4]
+
+[7,7,7,7]
+[7,7,7]
+
+[]
+[3]
+
+[[[]]]
+[[]]
+
+[1,[2,[3,[4,[5,6,7]]]],8,9]
+[1,[2,[3,[4,[5,6,0]]]],8,9]
+";
     assert_eq!(answer, run(input));
 }

@@ -1,9 +1,9 @@
-use crate::tree;
+use crate::utils::tree;
 
-fn parse(input: Vec<String>) -> Vec<(String, Vec<String>)> {
+fn parse(input: &str) -> Vec<(String, Vec<String>)> {
     let mut parsed = Vec::new();
     let mut command: Option<(String, Vec<String>)> = None;
-    for line in input {
+    for line in input.lines() {
         let mut chars = line.chars();
         if let Some(c) = chars.next() {
             if c == '$' {
@@ -27,7 +27,7 @@ fn parse(input: Vec<String>) -> Vec<(String, Vec<String>)> {
     parsed
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let parsed = parse(input);
 
     struct NodeInfo {
@@ -106,31 +106,29 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "24933642".to_string();
-    let input = vec![
-        "$ cd /".to_string(),
-        "$ ls".to_string(),
-        "dir a".to_string(),
-        "14848514 b.txt".to_string(),
-        "8504156 c.dat".to_string(),
-        "dir d".to_string(),
-        "$ cd a".to_string(),
-        "$ ls".to_string(),
-        "dir e".to_string(),
-        "29116 f".to_string(),
-        "2557 g".to_string(),
-        "62596 h.lst".to_string(),
-        "$ cd e".to_string(),
-        "$ ls".to_string(),
-        "584 i".to_string(),
-        "$ cd ..".to_string(),
-        "$ cd ..".to_string(),
-        "$ cd d".to_string(),
-        "$ ls".to_string(),
-        "4060174 j".to_string(),
-        "8033020 d.log".to_string(),
-        "5626152 d.ext".to_string(),
-        "7214296 k".to_string(),
-    ];
+    let input = "$ cd /
+$ ls
+dir a
+14848514 b.txt
+8504156 c.dat
+dir d
+$ cd a
+$ ls
+dir e
+29116 f
+2557 g
+62596 h.lst
+$ cd e
+$ ls
+584 i
+$ cd ..
+$ cd ..
+$ cd d
+$ ls
+4060174 j
+8033020 d.log
+5626152 d.ext
+7214296 k";
 
     assert_eq!(answer, run(input));
 }

@@ -1,11 +1,12 @@
 use std::collections::VecDeque;
 
-fn parse(input: Vec<String>) -> (Vec<VecDeque<char>>, Vec<(i32, i32, i32)>) {
+fn parse(input: &str) -> (Vec<VecDeque<char>>, Vec<(i32, i32, i32)>) {
     let mut stacks = Vec::<VecDeque<char>>::new();
-    for _ in 0..((input[0].len() + 1) / 4) {
+    let mut input_iter = input.lines().peekable();
+    for _ in 0..((input_iter.peek().unwrap().len() + 1) / 4) {
         stacks.push(VecDeque::<char>::new());
     }
-    let mut input_iter = input.iter();
+
     let mut row = input_iter.next().unwrap();
     while !row.is_empty() {
         let mut iterator = row.chars();
@@ -36,7 +37,7 @@ fn parse(input: Vec<String>) -> (Vec<VecDeque<char>>, Vec<(i32, i32, i32)>) {
     (stacks, actions)
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let (mut stacks, actions) = parse(input);
 
     for (count, from, to) in actions {
@@ -54,16 +55,14 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "MCD".to_string();
-    let input = vec![
-        "    [D]    ".to_string(),
-        "[N] [C]    ".to_string(),
-        "[Z] [M] [P]".to_string(),
-        " 1   2   3 ".to_string(),
-        "".to_string(),
-        "move 1 from 2 to 1".to_string(),
-        "move 3 from 1 to 3".to_string(),
-        "move 2 from 2 to 1".to_string(),
-        "move 1 from 1 to 2".to_string(),
-    ];
+    let input = "    [D]    
+[N] [C]    
+[Z] [M] [P]
+ 1   2   3 
+
+move 1 from 2 to 1
+move 3 from 1 to 3
+move 2 from 2 to 1
+move 1 from 1 to 2";
     assert_eq!(answer, run(input));
 }

@@ -1,7 +1,7 @@
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let pairs = {
         let mut _pairs = Vec::new();
-        for row in input {
+        for row in input.lines() {
             let numbers: Vec<i32> = row
                 .split(&[',', '-'])
                 .map(|e| (*e).parse::<i32>().unwrap())
@@ -31,13 +31,11 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "4".to_string();
-    let input = vec![
-        "2-4,6-8".to_string(),
-        "2-3,4-5".to_string(),
-        "5-7,7-9".to_string(),
-        "2-8,3-7".to_string(),
-        "6-6,4-6".to_string(),
-        "2-6,4-8".to_string(),
-    ];
+    let input = "2-4,6-8
+2-3,4-5
+5-7,7-9
+2-8,3-7
+6-6,4-6
+2-6,4-8";
     assert_eq!(answer, run(input));
 }

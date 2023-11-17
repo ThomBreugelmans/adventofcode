@@ -1,10 +1,10 @@
 use std::collections::VecDeque;
 
-fn parse(input: Vec<String>) -> (Vec<Vec<i32>>, Vec<(i32, i32)>, (i32, i32)) {
+fn parse(input: &str) -> (Vec<Vec<i32>>, Vec<(i32, i32)>, (i32, i32)) {
     let mut grid = Vec::new();
     let mut start = Vec::new();
     let mut finish = (0, 0);
-    for (y, line) in input.iter().enumerate() {
+    for (y, line) in input.lines().enumerate() {
         grid.push(Vec::new());
         for (x, c) in line.chars().enumerate() {
             grid[y].push(match c {
@@ -23,7 +23,7 @@ fn parse(input: Vec<String>) -> (Vec<Vec<i32>>, Vec<(i32, i32)>, (i32, i32)) {
     (grid, start, finish)
 }
 
-pub fn run(input: Vec<String>) -> String {
+pub fn run(input: &str) -> String {
     let (grid, starts, finish) = parse(input);
     let mut weights = Vec::new();
     for y in 0..grid.len() {
@@ -67,12 +67,10 @@ pub fn run(input: Vec<String>) -> String {
 #[test]
 fn test() {
     let answer = "29".to_string();
-    let input = vec![
-        "Sabqponm".to_string(),
-        "abcryxxl".to_string(),
-        "accszExk".to_string(),
-        "acctuvwj".to_string(),
-        "abdefghi".to_string(),
-    ];
+    let input = "Sabqponm
+abcryxxl
+accszExk
+acctuvwj
+abdefghi";
     assert_eq!(answer, run(input));
 }
