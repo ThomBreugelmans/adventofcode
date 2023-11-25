@@ -6,10 +6,8 @@ mod year2022;
 
 #[derive(Parser, Default)]
 struct CliArguments {
-    #[clap(required = false)]
-    prefix: String,
-    year: u16,
-    day: u8,
+    year: u32,
+    day: u32,
 }
 
 fn main() {
