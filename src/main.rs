@@ -3,6 +3,7 @@ use clap::Parser;
 use std::process::exit;
 
 mod year2022;
+mod year2023;
 
 #[derive(Parser, Default)]
 struct CliArguments {
@@ -27,6 +28,7 @@ fn main() {
         wrapper,
     } = match args.year {
         2022 => year2022::run(args.day),
+        2023 => year2023::run(args.day),
         _ => unimplemented!(),
     };
 
