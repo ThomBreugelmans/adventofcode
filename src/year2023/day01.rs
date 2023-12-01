@@ -1,4 +1,4 @@
-use std::{collections::VecDeque, str::Chars};
+use std::collections::VecDeque;
 
 const DIGITS: [&[u8]; 10] = [
     b"zero", b"one", b"two", b"three", b"four", b"five", b"six", b"seven", b"eight", b"nine",
