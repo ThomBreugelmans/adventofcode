@@ -56,17 +56,6 @@ impl State<'_> {
         state
     }
 
-    fn last_rows(&self) -> u64 {
-        let mut chunk = 0;
-        for offset in 0..8 {
-            chunk = (chunk << 8) | self.tower[self.height - offset] as u64;
-            if self.height - offset == 0 {
-                break;
-            }
-        }
-        chunk
-    }
-
     fn get_relief(&self) -> [usize; 7] {
         let mut relief = self.heights;
         (0..relief.len()).for_each(|i| {
@@ -131,33 +120,6 @@ impl Iterator for State<'_> {
     }
 }
 
-fn floyds_cycle_detection(orig: State<'_>) -> (usize, usize) {
-    let mut tortoise = orig.clone();
-    let mut hare = orig.clone();
-    hare.nth(4);
-    while tortoise.get_relief() != hare.get_relief() {
-        tortoise.next();
-        hare.nth(5);
-    }
-    let mut cycle_start = 0;
-    tortoise = orig.clone();
-    while tortoise.get_relief() != hare.get_relief() {
-        tortoise.next();
-        hare.next();
-        cycle_start += 1;
-    }
-
-    let mut period = 1;
-    hare = tortoise.clone();
-    hare.next();
-    while tortoise.get_relief() != hare.get_relief() {
-        hare.next();
-        period += 1;
-    }
-
-    (period, cycle_start)
-}
-
 pub fn run(input: &str) -> String {
     format!("    {}\n    {}", run_part1(input), run_part2(input))
 }
@@ -178,7 +140,6 @@ fn run_part2(input: &str) -> String {
 
     let mut total_rocks = 0;
     let mut highest = 0;
-    let mut jet = 0;
     let mut heights = [0usize; 13_000];
     while total_rocks < 1_000_000_000_000 {
         (highest, jet) = state.next().unwrap();
