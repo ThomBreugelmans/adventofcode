@@ -22,12 +22,6 @@ pub fn run(day: u32) -> Solution {
         17 => solution!(year2022, day17),
         18 => solution!(year2022, day18),
         19 => solution!(year2022, day19),
-        20 => solution!(year2022, day20),
-        21 => solution!(year2022, day21),
-        22 => solution!(year2022, day22),
-        23 => solution!(year2022, day23),
-        24 => solution!(year2022, day24),
-        25 => solution!(year2022, day25),
         _ => panic!("[E] Unknown day..."),
     }
 }
