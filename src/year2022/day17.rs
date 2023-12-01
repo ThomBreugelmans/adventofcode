@@ -140,6 +140,7 @@ fn run_part2(input: &str) -> String {
 
     let mut total_rocks = 0;
     let mut highest = 0;
+    let mut jet;
     let mut heights = [0usize; 13_000];
     while total_rocks < 1_000_000_000_000 {
         (highest, jet) = state.next().unwrap();
