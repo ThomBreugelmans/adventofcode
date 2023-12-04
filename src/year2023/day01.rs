@@ -70,11 +70,13 @@ fn run_part2(input: &str) -> String {
     res.to_string()
 }
 
+#[allow(dead_code)]
 const TEST_INPUT_ONE: &str = "1abc2
 pqr3stu8vwx
 a1b2c3d4e5f
 treb7uchet";
 
+#[allow(dead_code)]
 const TEST_INPUT_TWO: &str = "two1nine
 eightwothree
 abcone2threexyz

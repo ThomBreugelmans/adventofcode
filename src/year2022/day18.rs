@@ -119,6 +119,7 @@ fn run_part2(input: &str) -> String {
     count.to_string()
 }
 
+#[allow(dead_code)]
 const TEST_INPUT: &str = "2,2,2
 1,2,2
 3,2,2
