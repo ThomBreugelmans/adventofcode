@@ -39,13 +39,13 @@ pub fn run(input: &str) -> String {
 
 fn run_part1(input: &str) -> String {
     let games = parse(input);
-    const max_red: u32 = 12;
-    const max_green: u32 = 13;
-    const max_blue: u32 = 14;
+    const MAX_RED: u32 = 12;
+    const MAX_GREEN: u32 = 13;
+    const MAX_BLUE: u32 = 14;
     games
         .into_iter()
         .filter_map(|game| {
-            if game.red > max_red || game.green > max_green || game.blue > max_blue {
+            if game.red > MAX_RED || game.green > MAX_GREEN || game.blue > MAX_BLUE {
                 None
             } else {
                 Some(game.id as u32)
@@ -64,6 +64,7 @@ fn run_part2(input: &str) -> String {
         .to_string()
 }
 
+#[allow(dead_code)]
 const TEST_INPUT: &str = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green
 Game 2: 1 blue, 2 green; 3 green, 4 blue, 1 red; 1 green, 1 blue
 Game 3: 8 green, 6 blue, 20 red; 5 blue, 4 red, 13 green; 5 green, 1 red

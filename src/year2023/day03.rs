@@ -101,6 +101,7 @@ fn run_part2(input: &str) -> String {
         .to_string()
 }
 
+#[allow(dead_code)]
 const TEST_INPUT: &str = "467..114..
 ...*......
 ..35..633.
