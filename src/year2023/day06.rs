@@ -1,3 +1,5 @@
+use std::iter::zip;
+
 use nom::{
     bytes::complete::tag,
     character::complete::{digit1, multispace1, space1},
