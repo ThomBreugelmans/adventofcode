@@ -9,6 +9,7 @@ pub fn run(day: u32) -> Solution {
         4 => solution!(year2023, day04),
         5 => solution!(year2023, day05),
         6 => solution!(year2023, day06),
+        7 => solution!(year2023, day07),
         _ => panic!("[E] Unknown day..."),
     }
 }
