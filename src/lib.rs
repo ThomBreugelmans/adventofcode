@@ -1,4 +1,5 @@
 pub mod utils {
+    pub mod grid;
     pub mod network;
     pub mod solution;
     pub mod tree;
@@ -40,4 +41,5 @@ pub mod year2023 {
     pub mod day10;
     pub mod day11;
     pub mod day12;
+    pub mod day13;
 }
