@@ -40,26 +40,23 @@ fn reflectivity(mirror: &Vec<Vec<char>>) -> Vec<usize> {
         .collect()
 }
 
-fn reflects(mirror: &Vec<Vec<char>>) -> Option<Fold> {
+fn find_fold_by_condition(mirror: &Vec<Vec<char>>, cond: impl Fn(usize) -> bool) -> Option<Fold> {
     (reflectivity(mirror)
         .into_iter()
-        .position(|x| x == 0)
+        .position(&cond)
         .map(|r| Fold::Horizontal(r + 1)))
     .or(reflectivity(&transpose(mirror.clone()))
         .into_iter()
-        .position(|x| x == 0)
+        .position(&cond)
         .map(|c| Fold::Vertical(c + 1)))
 }
 
-fn has_smudge(mirror: &Vec<Vec<char>>) -> Option<Fold> {
-    (reflectivity(mirror)
-        .into_iter()
-        .position(|x| x == 1)
-        .map(|r| Fold::Horizontal(r + 1)))
-    .or(reflectivity(&transpose(mirror.clone()))
-        .into_iter()
-        .position(|x| x == 1)
-        .map(|c| Fold::Vertical(c + 1)))
+fn reflects(mirror: &Vec<Vec<char>>) -> Option<Fold> {
+    find_fold_by_condition(mirror, |x| x == 0)
+}
+
+fn clean_smudge(mirror: &Vec<Vec<char>>) -> Option<Fold> {
+    find_fold_by_condition(mirror, |x| x == 1)
 }
 
 pub fn run(input: &str) -> String {
@@ -83,7 +80,7 @@ fn run_part2(input: &str) -> String {
     let mirrors = parse(input);
     mirrors
         .into_iter()
-        .map(|m| match has_smudge(&m) {
+        .map(|m| match clean_smudge(&m) {
             Some(Fold::Vertical(c)) => c,
             Some(Fold::Horizontal(r)) => 100 * r,
             None => unreachable!("Each mirror should have a fold"),
