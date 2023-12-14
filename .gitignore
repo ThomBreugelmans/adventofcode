@@ -18,6 +18,3 @@ Cargo.lock
 **/#*
 .#*
 #*
-
-# Do not include AoC input
-input/
