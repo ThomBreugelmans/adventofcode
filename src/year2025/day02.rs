@@ -28,14 +28,9 @@ fn run_part1(input: &str) -> i64 {
     for (a, b) in parsed {
         //println!("{}-{}", a, b);
         for n in a..=b {
-            let str_n = format!("{}", n);
-            if str_n.len() % 2 != 0 {
-                continue;
-            }
-            let half = str_n.len() / 2;
-            let (n1, n2) = str_n.split_at(half);
-            // let n2 = &str_n[half..str_n.len()];
-
+            let char_count = f64::log10(n as f64) as u32 + 1;
+            let n1 = n / 10i64.pow(char_count / 2);
+            let n2 = n % 10i64.pow(char_count / 2);
             if n1 == n2 {
                 sum += n;
             }
@@ -48,21 +43,25 @@ fn run_part2(input: &str) -> i64 {
     let parsed = parse(input);
     let mut sum = 0;
     for (a, b) in parsed {
-        //println!("{}-{}", a, b);
         for n in a..=b {
-            let str_n = format!("{}", n);
-            let half = str_n.len() / 2;
-            for i in 1..=half {
-                let (n1, n2) = str_n.split_at(i);
-                let mut pref = n1.to_string();
-                while pref.len() < n2.len() {
-                    pref = format!("{}{}", pref, n1);
+            let char_count = f64::log10(n as f64) as u32 + 1;
+            'search: for i in 1..=(char_count / 2) {
+                let divisor = 10i64.pow(i);
+                let n1 = n % divisor;
+                if f64::log10(n1 as f64) as u32 + 1 != i {
+                    // else we get stuff like n1=08, which cannot be a repeating sequence
+                    continue;
                 }
-                if pref == n2 {
-                    // println!("{}", n);
-                    sum += n;
-                    break;
+                let mut n2 = n;
+                while n2 > 0 {
+                    let remainder = n2 % divisor;
+                    n2 /= divisor;
+                    if remainder != n1 {
+                        continue 'search;
+                    }
                 }
+                sum += n;
+                break;
             }
         }
     }
