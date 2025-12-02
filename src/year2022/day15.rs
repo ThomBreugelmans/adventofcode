@@ -1,12 +1,6 @@
 use std::cmp::{max, min};
 use std::collections::{HashMap, HashSet};
 
-#[derive(Copy, Clone, Debug, Hash, PartialEq, Eq)]
-struct Vector {
-    a: i32,
-    b: i32,
-}
-
 #[derive(Debug)]
 struct Segment {
     start: i32,

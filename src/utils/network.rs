@@ -125,7 +125,7 @@ mod network {
         };
         assert_eq!(net, control_net);
 
-        let mut root = Node {
+        let root = Node {
             id: 0,
             successors: Vec::new(),
             data: (),

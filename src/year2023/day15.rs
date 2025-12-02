@@ -16,14 +16,6 @@ fn new_hashmap() -> HashMap<'static> {
     std::array::from_fn(|_| vec![])
 }
 
-fn perform_action<'a>(hm: &mut HashMap<'a>, lens: Lens<'a>) {
-    if lens.focal.is_some() {
-        insert(hm, lens);
-    } else {
-        remove(hm, lens);
-    }
-}
-
 fn remove(hm: &mut HashMap, lens: Lens) {
     hm[lens.hash]
         .iter()
