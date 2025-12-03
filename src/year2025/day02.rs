@@ -1,25 +1,20 @@
+use itertools::Itertools;
 use macros::solution;
-use nom::{
-    bytes::complete::tag,
-    character::complete,
-    multi::separated_list1,
-    sequence::separated_pair
-};
 
-fn parse(input: &str) -> Vec<(i64,i64)> {
-    let (inp, res) = separated_list1(
-        tag(","),
-        separated_pair(
-            complete::i64::<&str, nom::error::Error<&str>>,
-            tag("-"),
-            complete::i64
-        )
-    )(input).unwrap();
-    assert!(inp == "" || inp == "\n");
-    res
+fn parse(input: &str) -> Vec<(i64, i64)> {
+    input
+        .trim()
+        .split(',')
+        .map(|p| {
+            p.split('-')
+                .map(|x| x.parse::<i64>().unwrap())
+                .collect_tuple()
+                .unwrap()
+        })
+        .collect()
 }
 
-#[solution(year=2025,day=2,part=1)]
+#[solution(year = 2025, day = 2, part = 1)]
 fn run_part1(input: &str) -> String {
     let parsed = parse(input);
     let mut sum = 0;
@@ -37,7 +32,7 @@ fn run_part1(input: &str) -> String {
     format!("{}", sum)
 }
 
-#[solution(year=2025,day=2,part=2)]
+#[solution(year = 2025, day = 2, part = 2)]
 fn run_part2(input: &str) -> String {
     let parsed = parse(input);
     let mut sum = 0;

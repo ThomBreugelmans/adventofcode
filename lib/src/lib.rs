@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use inventory;
 
 /// The structure holding the metadata for each registered solution.

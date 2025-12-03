@@ -29,8 +29,6 @@ pub fn format_duration(duration: Duration) -> String {
         } else if total_nanos.abs() >= NANOS_PER_MILLI {
             (total_nanos / NANOS_PER_MILLI, "ms")
         } else if total_nanos.abs() >= NANOS_PER_MICRO {
-            // Note: Use a double backslash \\ to escape the backslash
-            // for the LaTeX style \mus unit.
             (total_nanos / NANOS_PER_MICRO, "μs")
         } else {
             (total_nanos, "ns") // Default to nanoseconds
