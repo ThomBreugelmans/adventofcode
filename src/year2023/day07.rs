@@ -1,3 +1,4 @@
+use macros::solution;
 use std::cmp::Ordering;
 
 use nom::{
@@ -141,10 +142,7 @@ fn parse(input: &str, joker: bool) -> Vec<Bid> {
         .collect::<Vec<_>>()
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year = 2023, day = 7, part = 1)]
 fn run_part1(input: &str) -> String {
     let mut bids = parse(input, false);
     bids.sort();
@@ -155,6 +153,7 @@ fn run_part1(input: &str) -> String {
         .to_string()
 }
 
+#[solution(year = 2023, day = 7, part = 2)]
 fn run_part2(input: &str) -> String {
     let mut bids = parse(input, true);
     bids.sort();

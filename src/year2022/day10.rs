@@ -1,3 +1,5 @@
+use macros::solution;
+
 fn parse(input: &str) -> Vec<Option<i32>> {
     let mut res = Vec::new();
     for line in input.lines() {
@@ -11,6 +13,7 @@ fn parse(input: &str) -> Vec<Option<i32>> {
     res
 }
 
+#[solution(year = 2022, day = 10, part = 2)]
 pub fn run(input: &str) -> String {
     let cycles = parse(input);
 

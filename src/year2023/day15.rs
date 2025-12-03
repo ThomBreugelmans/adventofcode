@@ -1,3 +1,4 @@
+use macros::solution;
 use nom::branch::alt;
 use nom::bytes::complete::tag;
 use nom::character::complete::{alphanumeric1, digit0, digit1};
@@ -47,10 +48,7 @@ fn parse(input: &str) -> Vec<&str> {
     input.split(',').collect()
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year=2023, day=15, part=1)]
 fn run_part1(input: &str) -> String {
     let sequences: Vec<&str> = parse(input);
     sequences
@@ -60,6 +58,7 @@ fn run_part1(input: &str) -> String {
         .to_string()
 }
 
+#[solution(year=2023, day=15, part=2)]
 fn run_part2(input: &str) -> String {
     let sequences = parse(input);
     let lenses: Vec<Lens> = sequences

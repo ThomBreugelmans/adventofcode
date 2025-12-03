@@ -1,3 +1,4 @@
+use macros::solution;
 use std::collections::HashMap;
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
@@ -51,14 +52,7 @@ fn move_north(grid: Vec<Vec<Object>>) -> Vec<Vec<Object>> {
     new_grid
 }
 
-pub fn run(input: &str) -> String {
-    format!(
-        "Part 1: {}\n Part 2: {}",
-        run_part1(input),
-        run_part2(input)
-    )
-}
-
+#[solution(year=2023, day=14, part=1)]
 fn run_part1(input: &str) -> String {
     let mut grid = parse(input);
     grid = move_north(grid);
@@ -71,6 +65,7 @@ fn run_part1(input: &str) -> String {
         .to_string()
 }
 
+#[solution(year=2023, day=14, part=2)]
 fn run_part2(input: &str) -> String {
     let mut grid = parse(input);
     let mut cache = HashMap::new();

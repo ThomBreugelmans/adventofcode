@@ -1,3 +1,5 @@
+use macros::solution;
+
 type Ores = [u32; 4];
 type BuiltRobots = [u32; 4];
 const ORE: usize = 0;
@@ -136,10 +138,7 @@ fn next(
     }
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year = 2022, day = 19, part = 1)]
 fn run_part1(input: &str) -> String {
     let blueprints = parse(input);
     blueprints
@@ -150,6 +149,7 @@ fn run_part1(input: &str) -> String {
         .to_string()
 }
 
+#[solution(year = 2022, day = 19, part = 2)]
 fn run_part2(input: &str) -> String {
     let blueprints = parse(input);
     blueprints

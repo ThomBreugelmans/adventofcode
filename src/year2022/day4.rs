@@ -1,3 +1,6 @@
+use macros::solution;
+
+#[solution(year = 2022, day = 4, part = 2)]
 pub fn run(input: &str) -> String {
     let pairs = {
         let mut _pairs = Vec::new();

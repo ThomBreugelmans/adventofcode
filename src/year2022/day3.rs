@@ -1,3 +1,4 @@
+use macros::solution;
 use std::cmp::min;
 use std::collections::{HashMap, HashSet};
 
@@ -9,6 +10,7 @@ fn priority(item: char) -> i32 {
     }) as i32
 }
 
+#[solution(year = 2022, day = 3, part = 2)]
 pub fn run(input: &str) -> String {
     let mut items = Vec::new();
     let mut common = HashMap::new();

@@ -1,3 +1,5 @@
+use macros::solution;
+
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 struct Num {
     val: isize,
@@ -33,10 +35,7 @@ fn mix(v: &mut Vec<Num>) {
     }
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year = 2022, day = 20, part = 1)]
 fn run_part1(input: &str) -> String {
     let mut nums = parse(input);
 
@@ -57,6 +56,7 @@ fn run_part1(input: &str) -> String {
 }
 
 const DECRYPTION_KEY: isize = 811_589_153;
+#[solution(year = 2022, day = 20, part = 2)]
 fn run_part2(input: &str) -> String {
     let mut nums = parse(input);
     nums.iter_mut().for_each(|n| n.val *= DECRYPTION_KEY);

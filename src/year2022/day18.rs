@@ -1,3 +1,4 @@
+use macros::solution;
 use std::collections::{HashMap, VecDeque};
 
 #[derive(Copy, Clone, Eq, PartialEq, Debug)]
@@ -44,10 +45,7 @@ fn flood_fill(area: &mut [Type; 25 * 25 * 25]) {
     }
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year = 2022, day = 18, part = 1)]
 fn run_part1(input: &str) -> String {
     let cubes = parse(input);
 
@@ -88,6 +86,7 @@ fn run_part1(input: &str) -> String {
     neigh_count.values().map(|v| 6 - v).sum::<u32>().to_string()
 }
 
+#[solution(year = 2022, day = 18, part = 2)]
 fn run_part2(input: &str) -> String {
     let mut area = parse(input);
     flood_fill(&mut area);

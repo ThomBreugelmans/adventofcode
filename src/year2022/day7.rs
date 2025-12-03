@@ -1,4 +1,5 @@
 use crate::utils::tree;
+use macros::solution;
 
 fn parse(input: &str) -> Vec<(String, Vec<String>)> {
     let mut parsed = Vec::new();
@@ -27,6 +28,7 @@ fn parse(input: &str) -> Vec<(String, Vec<String>)> {
     parsed
 }
 
+#[solution(year = 2022, day = 7, part = 2)]
 pub fn run(input: &str) -> String {
     let parsed = parse(input);
 

@@ -1,3 +1,5 @@
+use macros::solution;
+
 fn parse(input: &str) -> Vec<Vec<i32>> {
     let mut res = Vec::new();
     for line in input.lines() {
@@ -10,6 +12,7 @@ fn parse(input: &str) -> Vec<Vec<i32>> {
     res
 }
 
+#[solution(year = 2022, day = 8, part = 2)]
 pub fn run(input: &str) -> String {
     let width = input.find('\n').unwrap();
     let height = input.len() / width;

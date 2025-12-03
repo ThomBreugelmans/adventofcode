@@ -1,3 +1,4 @@
+use macros::solution;
 use std::collections::VecDeque;
 
 struct Monkey {
@@ -61,6 +62,7 @@ fn parse(input: &str) -> Vec<Monkey> {
     monkeys
 }
 
+#[solution(year = 2022, day = 11, part = 2)]
 pub fn run(input: &str) -> String {
     let mut monkeys = parse(input);
 

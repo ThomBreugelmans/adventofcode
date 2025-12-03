@@ -1,3 +1,4 @@
+use macros::solution;
 use std::cmp::Ordering;
 use std::str::Chars;
 
@@ -35,11 +36,7 @@ impl Ord for Packet {
     fn cmp(&self, other: &Self) -> Ordering {
         let res = test_left_and_right(self, other);
         if let Some(x) = res {
-            if x {
-                Ordering::Less
-            } else {
-                Ordering::Equal
-            }
+            if x { Ordering::Less } else { Ordering::Equal }
         } else {
             Ordering::Greater
         }
@@ -174,6 +171,7 @@ fn parse(input: &str) -> Vec<(Packet, Packet)> {
     packets
 }
 
+#[solution(year = 2022, day = 13, part = 2)]
 pub fn run(input: &str) -> String {
     let parsed = parse(input);
 

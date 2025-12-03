@@ -1,3 +1,4 @@
+use macros::solution;
 use std::cmp::{max, min};
 use std::collections::HashSet;
 
@@ -33,6 +34,7 @@ fn parse(input: &str) -> (HashSet<(i32, i32)>, i32) {
     (h, lowest)
 }
 
+#[solution(year = 2022, day = 14, part = 2)]
 pub fn run(input: &str) -> String {
     let (rocks, lowest) = parse(input);
     let mut sands = HashSet::<(i32, i32)>::new();

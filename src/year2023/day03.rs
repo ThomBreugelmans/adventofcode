@@ -1,3 +1,5 @@
+use macros::solution;
+
 #[derive(Debug)]
 struct Number {
     value: u32,
@@ -71,10 +73,7 @@ fn parse(input: &str) -> (Vec<Number>, Vec<Symbol>) {
     res
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year = 2023, day = 3, part = 1)]
 fn run_part1(input: &str) -> String {
     let (parts, symbols) = parse(input);
     parts
@@ -85,6 +84,7 @@ fn run_part1(input: &str) -> String {
         .to_string()
 }
 
+#[solution(year = 2023, day = 3, part = 2)]
 fn run_part2(input: &str) -> String {
     let (parts, symbols) = parse(input);
     symbols

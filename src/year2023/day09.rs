@@ -1,3 +1,4 @@
+use macros::solution;
 use nom::{
     character::complete::{self, space1},
     multi::separated_list1,
@@ -11,10 +12,6 @@ fn parse(input: &str) -> Vec<Vec<i32>> {
         res.push(l);
     }
     res
-}
-
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
 }
 
 fn extrapolate(nums: Vec<i32>, backwards: bool) -> i32 {
@@ -36,6 +33,7 @@ fn extrapolate(nums: Vec<i32>, backwards: bool) -> i32 {
 }
 
 //too high: 1947980994
+#[solution(year=2023, day=9, part=1)]
 fn run_part1(input: &str) -> String {
     let numbers = parse(input);
     numbers
@@ -45,6 +43,7 @@ fn run_part1(input: &str) -> String {
         .to_string()
 }
 
+#[solution(year=2023, day=9, part=2)]
 fn run_part2(input: &str) -> String {
     let numbers = parse(input);
     numbers

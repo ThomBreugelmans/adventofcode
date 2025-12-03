@@ -1,3 +1,4 @@
+use macros::solution;
 use nom;
 
 fn parse(input: &str) -> Vec<(&str, i64)> {
@@ -10,11 +11,8 @@ fn parse(input: &str) -> Vec<(&str, i64)> {
     res
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2 {}", run_part1(input), run_part2(input))
-}
-
-fn run_part1(input: &str) -> i64 {
+#[solution(year=2025, day=1, part=1)]
+pub fn run_part1(input: &str) -> String {
     let parsed = parse(input);
     let mut pos = 50i64;
     let mut sum = 0;
@@ -26,10 +24,11 @@ fn run_part1(input: &str) -> i64 {
         }
         pos = new_pos;
     }
-    sum
+    format!("{}", sum)
 }
 
-fn run_part2(input: &str) -> i64 {
+#[solution(year=2025, day=1, part=2)]
+pub fn run_part2(input: &str) -> String {
     let parsed = parse(input);
     let mut pos = 50i64;
     let mut sum = 0;
@@ -51,7 +50,7 @@ fn run_part2(input: &str) -> i64 {
 
         pos = new_pos.rem_euclid(100);
     }
-    sum
+    format!("{}", sum)
 }
 
 #[allow(dead_code)]
@@ -68,12 +67,12 @@ L82";
 
 #[test]
 fn test_part1() {
-    let answer = 3;
+    let answer = "3";
     assert_eq!(answer, run_part1(TEST_INPUT));
 }
 
 #[test]
 fn test_part2() {
-    let answer = 6;
+    let answer = "6";
     assert_eq!(answer, run_part2(TEST_INPUT));
 }

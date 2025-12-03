@@ -1,9 +1,10 @@
+use macros::solution;
 use nom::{
+    IResult, Parser,
     bytes::complete::tag,
     character::complete::{digit1, line_ending, multispace0, space1},
     multi::separated_list1,
     sequence::{preceded, separated_pair, tuple},
-    IResult, Parser,
 };
 
 struct Almanac {
@@ -128,10 +129,7 @@ fn range_mapper(from: (usize, usize), to: &Vec<(usize, usize, usize)>) -> Vec<(u
     new_ranges
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year = 2023, day = 5, part = 1)]
 fn run_part1(input: &str) -> String {
     let almanac = parse(input);
 
@@ -149,6 +147,7 @@ fn run_part1(input: &str) -> String {
     locs.min().unwrap().to_string()
 }
 
+#[solution(year = 2023, day = 5, part = 2)]
 fn run_part2(input: &str) -> String {
     let almanac = parse(input);
 

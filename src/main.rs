@@ -1,43 +1,131 @@
-use aoc::utils::solution::Solution;
-use clap::Parser;
-use std::process::exit;
+use lib::Solution;
+use std::time::Duration;
+use std::{env, fs::read_to_string, time::Instant};
 
 // mod year2022;
 // mod year2023;
 mod year2025;
 
-#[derive(Parser, Default)]
-struct CliArguments {
-    year: u32,
-    day: u32,
+pub fn format_duration(duration: Duration) -> String {
+    // Define the thresholds in nanoseconds (n_s)
+    const NANOS_PER_MICRO: f64 = 1_000.0;
+    const NANOS_PER_MILLI: f64 = 1_000_000.0;
+    const NANOS_PER_SECOND: f64 = 1_000_000_000.0;
+    const NANOS_PER_MINUTE: f64 = 60.0 * NANOS_PER_SECOND;
+    const NANOS_PER_HOUR: f64 = 60.0 * NANOS_PER_MINUTE;
+
+    // Get the total duration in floating-point nanoseconds
+    let total_nanos = duration.as_secs_f64() * 1_000_000_000.0;
+
+    // Use a match-like structure to find the largest appropriate unit.
+    // We check from the largest unit down to the smallest.
+    let (value, unit) = {
+        if total_nanos.abs() >= NANOS_PER_HOUR {
+            (total_nanos / NANOS_PER_HOUR, "h")
+        } else if total_nanos.abs() >= NANOS_PER_MINUTE {
+            (total_nanos / NANOS_PER_MINUTE, "m")
+        } else if total_nanos.abs() >= NANOS_PER_SECOND {
+            (total_nanos / NANOS_PER_SECOND, "s")
+        } else if total_nanos.abs() >= NANOS_PER_MILLI {
+            (total_nanos / NANOS_PER_MILLI, "ms")
+        } else if total_nanos.abs() >= NANOS_PER_MICRO {
+            // Note: Use a double backslash \\ to escape the backslash
+            // for the LaTeX style \mus unit.
+            (total_nanos / NANOS_PER_MICRO, "μs")
+        } else {
+            (total_nanos, "ns") // Default to nanoseconds
+        }
+    };
+
+    // Format the output. Using 2 decimal places is common for dynamic units.
+    format!("{:.2} {}", value, unit)
 }
 
 fn main() {
-    let args = CliArguments::parse();
-    if args.day > 25 {
-        println!("Only 25 days until Christmas exist!");
-        exit(1);
-    } else if args.day == 0 {
-        println!("There is no 0th day until Christmas!");
-        exit(1);
+    let args: Vec<String> = env::args().collect();
+    if args.len() < 2 {
+        println!("Usage: cargo run <YEAR> [<DAY> [<PART (1 or 2)>] ]");
+        return;
     }
 
-    let Solution {
-        year,
-        day,
-        input,
-        wrapper,
-    } = match args.year {
-        // 2022 => year2022::run(args.day),
-        // 2023 => year2023::run(args.day),
-        2025 => year2025::run(args.day),
-        _ => unimplemented!(),
+    let target_year: u16 = args[1].parse().expect("Invalid year");
+    let target_day: Option<u8> = if args.len() >= 3 {
+        Some(args[2].parse().expect("Invalid day"))
+    } else {
+        None
+    };
+    let target_part: Option<u8> = if args.len() >= 4 {
+        Some(args[3].parse().expect("Invalid part (must be 1 or 2)"))
+    } else {
+        None
     };
 
-    println!(
-        "Solution for challenge {} of year {}:\n{}",
-        day,
-        year,
-        (wrapper)(input)
+    // Contains (year, day, part, result, duration)
+    let mut results: Vec<(u16, u8, u8, String, String)> = vec![];
+
+    // inventory::iter() accesses the static list of all registered Solutions
+    for solution in inventory::iter::<Solution> {
+        if solution.year == target_year
+            && (target_day.is_none() || solution.day == target_day.unwrap())
+            && (target_part.is_none() || solution.part == target_part.unwrap())
+        {
+            // Found specified solution, get input
+            let input = read_to_string(format!(
+                "./input/year{}/day{:02}",
+                solution.year, solution.day
+            ))
+            .expect(format!("No input found for {}-{}", solution.year, solution.day).as_str());
+
+            let now = Instant::now();
+            let result = (solution.func)(&input);
+            let duration = now.elapsed();
+            results.push((
+                solution.year,
+                solution.day,
+                solution.part,
+                result,
+                format_duration(duration),
+            ));
+        }
+    }
+
+    if results.is_empty() {
+        return;
+    }
+
+    results.sort_by(|a, b| {
+        (a.0 as u32 * 1000 + a.1 as u32 * 10 + a.2 as u32)
+            .cmp(&(b.0 as u32 * 1000 + b.1 as u32 * 10 + b.2 as u32))
+    });
+
+    // Printing results in a nice table:
+    // 1. First we need to get the length of longest result and duration
+    let max_len_result = 6.max(results.iter().map(|v| v.3.len()).max().unwrap());
+    let max_len_duration = 8.max(results.iter().map(|v| v.4.len()).max().unwrap());
+    let delim = format!(
+        "+{}+{}+{}+{}+{}+",
+        "-".repeat(6),
+        "-".repeat(5),
+        "-".repeat(6),
+        "-".repeat(max_len_result + 2),
+        "-".repeat(max_len_duration + 2)
     );
+    println!("\n{}", delim);
+    println!(
+        "| Year | Day | Part | Result{} | Duration{} |",
+        " ".repeat(max_len_result - 6),
+        " ".repeat(max_len_duration - 8)
+    );
+    println!("{}", delim);
+    results
+        .into_iter()
+        .map(|(y, d, p, r, dur)| {
+            format!(
+                "| {y} | {d: <3} | {p: <4} | {r}{} | {dur}{} |",
+                &" ".repeat(max_len_result - r.len()),
+                &" ".repeat(max_len_duration - dur.len())
+            )
+        })
+        .for_each(|r| println!("{}", r));
+    println!("{}\n", delim);
 }

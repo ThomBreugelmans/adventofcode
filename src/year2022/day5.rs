@@ -1,3 +1,4 @@
+use macros::solution;
 use std::collections::VecDeque;
 
 fn parse(input: &str) -> (Vec<VecDeque<char>>, Vec<(i32, i32, i32)>) {
@@ -37,6 +38,7 @@ fn parse(input: &str) -> (Vec<VecDeque<char>>, Vec<(i32, i32, i32)>) {
     (stacks, actions)
 }
 
+#[solution(year = 2022, day = 5, part = 2)]
 pub fn run(input: &str) -> String {
     let (mut stacks, actions) = parse(input);
 
@@ -55,10 +57,10 @@ pub fn run(input: &str) -> String {
 #[test]
 fn test() {
     let answer = "MCD".to_string();
-    let input = "    [D]    
-[N] [C]    
+    let input = "    [D]
+[N] [C]
 [Z] [M] [P]
- 1   2   3 
+ 1   2   3
 
 move 1 from 2 to 1
 move 3 from 1 to 3

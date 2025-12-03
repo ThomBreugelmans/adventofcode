@@ -1,3 +1,4 @@
+use macros::solution;
 use std::collections::VecDeque;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq)]
@@ -144,10 +145,7 @@ fn count(grid: &Grid) -> usize {
     count
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year=2023, day=10, part=1)]
 fn run_part1(input: &str) -> String {
     let (mut grid, start) = parse(input);
     flood_fill(&mut grid, start);
@@ -165,6 +163,7 @@ fn run_part1(input: &str) -> String {
     .to_string()
 }
 
+#[solution(year=2023, day=10, part=2)]
 fn run_part2(input: &str) -> String {
     let (mut grid, start) = parse(input);
     flood_fill(&mut grid, start);

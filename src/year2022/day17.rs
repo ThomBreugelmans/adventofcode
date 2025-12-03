@@ -1,3 +1,4 @@
+use macros::solution;
 use std::collections::HashMap;
 use std::iter::{Copied, Cycle, Enumerate, Peekable};
 use std::slice::Iter;
@@ -120,10 +121,7 @@ impl Iterator for State<'_> {
     }
 }
 
-pub fn run(input: &str) -> String {
-    format!("    {}\n    {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year = 2022, day = 17, part = 1)]
 fn run_part1(input: &str) -> String {
     State::new(input.trim().as_bytes())
         .nth(2021)
@@ -132,6 +130,7 @@ fn run_part1(input: &str) -> String {
         .to_string()
 }
 
+#[solution(year = 2022, day = 17, part = 2)]
 fn run_part2(input: &str) -> String {
     // now need to run for 1_000_000_000_000 iterations, so we need to do some cycle detection
     let directions = input.trim().as_bytes();

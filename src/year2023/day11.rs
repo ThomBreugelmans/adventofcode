@@ -1,5 +1,6 @@
 /// BONUS: a very 'beautiful' oneliner in python (the last parameter of the lambda is 1 for part 1 and 999_999 for part 2):
 /// print((lambda f,e: (lambda gs,exs,eys: sum([sum([abs(g[0]-a[0])+abs(g[1]-a[1])+(len([u for u in exs[min(g[0],a[0]):max(g[0],a[0])] if u==1])+len([v for v in eys[min(g[1],a[1]):max(g[1],a[1])] if v==1]))*e for a in gs[i+1:]]) for i,g in enumerate(gs)]))([p for p,c in sum(f,[]) if c=='#'],[1 if len(x) == 0 else 0 for x in [[d for d in c if d[1]=='#'] for c in list(map(list, zip(*f)))]],[1 if len(y)==0 else 0 for y in [[d for d in c if d[1]=='#'] for c in f]]))([[((x,y),c) for x,c in enumerate(r)] for y,r in [(l[0],l[1].split('\n')[0]) for l in enumerate(open('input.txt').readlines())]],1))
+use macros::solution;
 use crate::utils::grid::transpose;
 
 fn dist(a: &(usize, usize), b: &(usize, usize)) -> u64 {
@@ -53,14 +54,12 @@ fn compute(input: &str, expansion: u64) -> u64 {
         .sum()
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year=2023, day=11, part=1)]
 fn run_part1(input: &str) -> String {
     compute(input, 2).to_string()
 }
 
+#[solution(year=2023, day=11, part=2)]
 fn run_part2(input: &str) -> String {
     compute(input, 1000000).to_string()
 }

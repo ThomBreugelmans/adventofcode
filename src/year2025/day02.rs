@@ -1,3 +1,4 @@
+use macros::solution;
 use nom::{
     bytes::complete::tag,
     character::complete,
@@ -18,11 +19,8 @@ fn parse(input: &str) -> Vec<(i64,i64)> {
     res
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
-fn run_part1(input: &str) -> i64 {
+#[solution(year=2025,day=2,part=1)]
+fn run_part1(input: &str) -> String {
     let parsed = parse(input);
     let mut sum = 0;
     for (a, b) in parsed {
@@ -36,10 +34,11 @@ fn run_part1(input: &str) -> i64 {
             }
         }
     }
-    sum
+    format!("{}", sum)
 }
 
-fn run_part2(input: &str) -> i64 {
+#[solution(year=2025,day=2,part=2)]
+fn run_part2(input: &str) -> String {
     let parsed = parse(input);
     let mut sum = 0;
     for (a, b) in parsed {
@@ -65,7 +64,7 @@ fn run_part2(input: &str) -> i64 {
             }
         }
     }
-    sum
+    format!("{}", sum)
 }
 
 #[allow(dead_code)]
@@ -73,12 +72,12 @@ const TEST_INPUT: &str = "11-22,95-115,998-1012,1188511880-1188511890,222220-222
 
 #[test]
 fn test_part1() {
-    let answer = 1227775554;
+    let answer = "1227775554";
     assert_eq!(answer, run_part1(TEST_INPUT));
 }
 
 #[test]
 fn test_part2() {
-    let answer = 4174379265;
+    let answer = "4174379265";
     assert_eq!(answer, run_part2(TEST_INPUT));
 }

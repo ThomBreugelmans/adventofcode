@@ -1,3 +1,4 @@
+use macros::solution;
 use pathfinding::prelude::dijkstra;
 use std::collections::{HashMap, HashSet};
 
@@ -151,15 +152,7 @@ fn get_score_of_path(
     score
 }
 
-pub fn run(input: &str) -> String {
-    let mut memoise = HashMap::new();
-    format!(
-        "  Part 1: {}\n  Part 2: {}",
-        run_part1(input, &mut memoise),
-        run_part2(input, &mut memoise)
-    )
-}
-
+#[solution(year = 2022, day = 16, part = 1)]
 fn run_part1(input: &str, memoise: &mut HashMap<Vec<String>, u32>) -> String {
     let start = "AA".to_string();
     let parsed = parse(input);
@@ -187,6 +180,7 @@ fn run_part1(input: &str, memoise: &mut HashMap<Vec<String>, u32>) -> String {
         .to_string()
 }
 
+#[solution(year = 2022, day = 16, part = 2)]
 fn run_part2(input: &str, memoise: &mut HashMap<Vec<String>, u32>) -> String {
     let parsed = parse(input);
     let x = get_reduced_net(parsed);

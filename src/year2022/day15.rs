@@ -1,3 +1,4 @@
+use macros::solution;
 use std::cmp::{max, min};
 use std::collections::{HashMap, HashSet};
 
@@ -89,14 +90,7 @@ fn create_segments(input: Vec<((i32, i32), (i32, i32))>) -> HashMap<i32, Vec<Seg
     segments
 }
 
-pub fn run(input: &str) -> String {
-    format!(
-        "  Part 1: {}\n  Part 2: {}",
-        run_part1(input, 2_000_000),
-        run_part2(input, 4_000_000)
-    )
-}
-
+#[solution(year = 2022, day = 15, part = 1)]
 fn run_part1(input: &str, line: i32) -> String {
     let parsed = parse(input);
 
@@ -119,6 +113,7 @@ fn run_part1(input: &str, line: i32) -> String {
     count.to_string()
 }
 
+#[solution(year = 2022, day = 15, part = 2)]
 fn run_part2(input: &str, limit: i32) -> String {
     let parsed = parse(input);
 

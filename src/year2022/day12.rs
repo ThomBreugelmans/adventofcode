@@ -1,3 +1,4 @@
+use macros::solution;
 use std::collections::VecDeque;
 
 fn parse(input: &str) -> (Vec<Vec<i32>>, Vec<(i32, i32)>, (i32, i32)) {
@@ -23,6 +24,7 @@ fn parse(input: &str) -> (Vec<Vec<i32>>, Vec<(i32, i32)>, (i32, i32)) {
     (grid, start, finish)
 }
 
+#[solution(year = 2022, day = 12, part = 2)]
 pub fn run(input: &str) -> String {
     let (grid, starts, finish) = parse(input);
     let mut weights = Vec::new();

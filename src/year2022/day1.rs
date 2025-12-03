@@ -1,3 +1,6 @@
+use macros::solution;
+
+#[solution(year = 2022, day = 1, part = 2)]
 pub fn run(input: &str) -> String {
     let mut elves: Vec<i32> = vec![0];
     for cal in input.lines() {

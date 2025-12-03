@@ -1,3 +1,4 @@
+use macros::solution;
 use std::{collections::BTreeMap, iter::Cycle, vec::IntoIter};
 
 use nom::{
@@ -52,10 +53,7 @@ fn parse(input: &str) -> (Instructions<Dir>, BTreeMap<&str, (&str, &str)>) {
     (instructions, paths)
 }
 
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2: {}", run_part1(input), run_part2(input))
-}
-
+#[solution(year = 2023, day = 8, part = 1)]
 fn run_part1(input: &str) -> String {
     let (mut instructions, paths) = parse(input);
     let mut cur_pos = "AAA";
@@ -73,6 +71,7 @@ fn run_part1(input: &str) -> String {
     count.to_string()
 }
 
+#[solution(year = 2023, day = 8, part = 2)]
 fn run_part2(input: &str) -> String {
     let (instructions, paths) = parse(input);
     let positions = paths

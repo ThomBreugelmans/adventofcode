@@ -1,9 +1,7 @@
+use macros::solution;
+
 fn parse(input: &str) -> Vec<Vec<u8>> {
     input.trim().split('\n').map(|r| r.as_bytes().into_iter().map(|&x| x-'0' as u8).collect()).collect()
-}
-
-pub fn run(input: &str) -> String {
-    format!("Part 1: {}\nPart 2 {}", run_part1(input), run_part2(input))
 }
 
 fn find_n_batteries(batteries: &Vec<u8>, n: usize) -> u64 {
@@ -20,7 +18,8 @@ fn find_n_batteries(batteries: &Vec<u8>, n: usize) -> u64 {
     sum
 }
 
-fn run_part1(input: &str) -> u64 {
+#[solution(year=2025,day=3,part=1)]
+fn run_part1(input: &str) -> String {
     let parsed = parse(input);
     let mut sum = 0u64;
     for bat in parsed {
@@ -28,10 +27,11 @@ fn run_part1(input: &str) -> u64 {
         sum += r;
         // println!("{}", r);
     }
-    sum
+    format!("{}", sum)
 }
 
-fn run_part2(input: &str) -> u64 {
+#[solution(year=2025,day=3,part=2)]
+fn run_part2(input: &str) -> String {
     let parsed = parse(input);
     let mut sum = 0u64;
     for bat in parsed {
@@ -39,7 +39,7 @@ fn run_part2(input: &str) -> u64 {
         sum += r;
         // println!("{}", r);
     }
-    sum
+    format!("{}", sum)
 }
 
 #[allow(dead_code)]
@@ -56,12 +56,12 @@ fn test_parser() {
 
 #[test]
 fn test_part1() {
-    let answer = 357;
+    let answer = "357";
     assert_eq!(answer, run_part1(TEST_INPUT));
 }
 
 #[test]
 fn test_part2() {
-    let answer = 3121910778619;
+    let answer = "3121910778619";
     assert_eq!(answer, run_part2(TEST_INPUT));
 }

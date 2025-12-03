@@ -1,3 +1,5 @@
+use macros::solution;
+
 fn score(opponent: i8, you: i8) -> i32 {
     match you {
         0 => (((opponent - 1).rem_euclid(3)) + 1) as i32,
@@ -7,6 +9,7 @@ fn score(opponent: i8, you: i8) -> i32 {
     }
 }
 
+#[solution(year = 2022, day = 2, part = 2)]
 pub fn run(input: &str) -> String {
     let mut rounds = Vec::new();
     for round in input.lines() {

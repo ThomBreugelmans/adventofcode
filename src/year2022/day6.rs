@@ -1,5 +1,7 @@
+use macros::solution;
 use std::collections::HashSet;
 
+#[solution(year = 2022, day = 6, part = 2)]
 pub fn run(input: &str) -> String {
     let string = input.chars().collect::<Vec<char>>();
 

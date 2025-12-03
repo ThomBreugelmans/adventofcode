@@ -1,3 +1,4 @@
+use macros::solution;
 use std::collections::HashSet;
 
 #[derive(Debug)]
@@ -45,6 +46,7 @@ struct Node {
     y: i32,
 }
 
+#[solution(year = 2025, day = 9, part = 2)]
 pub fn run(input: &str) -> String {
     let directions = parse(input);
     let mut rope: [Node; 10] = [
