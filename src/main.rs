@@ -2,8 +2,8 @@ use aoc::utils::solution::Solution;
 use clap::Parser;
 use std::process::exit;
 
-mod year2022;
-mod year2023;
+// mod year2022;
+// mod year2023;
 mod year2025;
 
 #[derive(Parser, Default)]
@@ -28,8 +28,8 @@ fn main() {
         input,
         wrapper,
     } = match args.year {
-        2022 => year2022::run(args.day),
-        2023 => year2023::run(args.day),
+        // 2022 => year2022::run(args.day),
+        // 2023 => year2023::run(args.day),
         2025 => year2025::run(args.day),
         _ => unimplemented!(),
     };
