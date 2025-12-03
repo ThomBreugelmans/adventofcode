@@ -11,11 +11,11 @@ pub fn run(input: &str) -> String {
 }
 
 fn run_part1(input: &str) -> i64 {
-    todo!()
+    -1
 }
 
 fn run_part2(input: &str) -> i64 {
-    todo!()
+    -1
 }
 
 #[allow(dead_code)]
