@@ -1,4 +1,9 @@
+use dotenv::dotenv;
 use lib::Solution;
+use reqwest::header::{COOKIE, HeaderMap, HeaderValue, USER_AGENT};
+use std::fs::File;
+use std::io::Write;
+use std::path::PathBuf;
 use std::time::Duration;
 use std::{env, fs::read_to_string, time::Instant};
 
@@ -40,6 +45,7 @@ pub fn format_duration(duration: Duration) -> String {
 }
 
 fn main() {
+    dotenv().ok();
     let args: Vec<String> = env::args().collect();
     if args.len() < 2 {
         println!("Usage: cargo run <YEAR> [<DAY> [<PART (1 or 2)>] ]");
@@ -68,11 +74,42 @@ fn main() {
             && (target_part.is_none() || solution.part == target_part.unwrap())
         {
             // Found specified solution, get input
-            let input = read_to_string(format!(
-                "./input/year{}/day{:02}",
-                solution.year, solution.day
-            ))
-            .expect(format!("No input found for {}-{}", solution.year, solution.day).as_str());
+            let input_fn = format!("./input/year{}/day{:02}", solution.year, solution.day);
+            let input_path = PathBuf::from(&input_fn);
+            if !input_path.exists() {
+                // Download the input from adventofcode.com
+                // Example UA="github.com/ThomBreugelmans/adventofcode by thombreugelmans@outlook.com";
+                let user_agent = env::vars().find(|(k, _)| k == "AOC_USER_AGENT").unwrap().1;
+                let session_cookie = env::vars().find(|(k, _)| k == "AOC_SESSION").unwrap().1;
+
+                let mut headers = HeaderMap::new();
+                headers.insert(USER_AGENT, HeaderValue::from_str(&user_agent).unwrap());
+                let cookie_header =
+                    HeaderValue::from_str(&format!("session={}", session_cookie)).unwrap();
+                headers.insert(COOKIE, cookie_header);
+
+                let client = reqwest::blocking::Client::new();
+                let response = client
+                    .get(format!(
+                        "https://adventofcode.com/{}/day/{}/input",
+                        solution.year, solution.day
+                    ))
+                    .headers(headers)
+                    .send() // Await the response
+                    .expect("Something went wrong while getting puzzle input"); // Check for 4xx/5xx status codes
+
+                // if needed create all parent directories for this input file
+                if let Some(parent) = input_path.parent() {
+                    let _ = std::fs::create_dir_all(parent);
+                }
+                let mut file = File::create(input_path).expect("Error creating puzzle input file");
+                let bytes = response.bytes().expect("Error reading HTTP response body");
+                file.write_all(&bytes)
+                    .expect("Error writing to puzzle input file");
+            }
+
+            let input = read_to_string(input_fn)
+                .expect(format!("No input found for {}-{}", solution.year, solution.day).as_str());
 
             let now = Instant::now();
             let result = (solution.func)(&input);
