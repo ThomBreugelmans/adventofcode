@@ -64,6 +64,28 @@ fn parse(input: &str) -> ([[CellType; MAX.0]; MAX.1], (usize, usize)) {
     (grid, (boundary[0] + 1, boundary[1] + 1))
 }
 
+fn is_movable(grid: &[[CellType; MAX.0]; MAX.1], x: usize, y: usize) -> bool {
+    if grid[y][x] == CellType::Empty {
+        return false;
+    }
+    let neigh = get_neighbours(x, y);
+    neigh
+        .iter()
+        .filter_map(|x| {
+            if let Some(n) = x {
+                if grid[n.1][n.0] == CellType::PaperRoll {
+                    Some(())
+                } else {
+                    None
+                }
+            } else {
+                None
+            }
+        })
+        .count()
+        < 4
+}
+
 fn get_movable_paperrolls(
     grid: &[[CellType; MAX.0]; MAX.1],
     boundary: (usize, usize),
@@ -76,23 +98,7 @@ fn get_movable_paperrolls(
             if cell == CellType::Empty {
                 continue;
             }
-            let neigh = get_neighbours(x, y);
-            (neigh
-                .iter()
-                .filter_map(|x| {
-                    if let Some(n) = x {
-                        if grid[n.1][n.0] == CellType::PaperRoll {
-                            Some(())
-                        } else {
-                            None
-                        }
-                    } else {
-                        None
-                    }
-                })
-                .count()
-                < 4)
-            .then(|| movable.push((x, y)));
+            is_movable(grid, x, y).then(|| movable.push((x, y)));
         }
     }
     movable
@@ -105,20 +111,54 @@ fn part1(input: &str) -> String {
     sum.to_string()
 }
 
+// fn grid2str(grid: &[[CellType; MAX.0]; MAX.1], boundary: (usize, usize)) -> String {
+//     let mut string = String::new();
+//     for (j, r) in grid.iter().enumerate() {
+//         if j >= boundary.1 {
+//             break;
+//         }
+//         let r_str = r
+//             .iter()
+//             .enumerate()
+//             .filter(|(i, _)| *i < boundary.0)
+//             .map(|(_, c)| match c {
+//                 CellType::PaperRoll => '@',
+//                 _ => '.',
+//             })
+//             .fold(String::from(""), |i, x| format!("{i}{x}"));
+//         string = format!("{}\n{}", string, r_str);
+//     }
+//     string
+// }
+
 #[solution(year = 2025, day = 4, part = 2)]
 fn part2(input: &str) -> String {
+    // println!("{input}\n\n");
     let (mut parsed, boundary) = parse(input);
     let mut sum = 0;
+    let mut candidates = get_movable_paperrolls(&parsed, boundary);
     loop {
-        let movable = get_movable_paperrolls(&parsed, boundary);
-        if movable.is_empty() {
+        if candidates.is_empty() {
             break;
         }
-        sum += movable.len();
-        for m in movable {
-            parsed[m.1][m.0] = CellType::Empty;
+        let movable = candidates.pop().unwrap();
+        if parsed[movable.1][movable.0] == CellType::Empty {
+            continue;
+        }
+        sum += 1;
+        parsed[movable.1][movable.0] = CellType::Empty;
+        // Only consider those surrounding the movable for the next
+        for c in get_neighbours(movable.0, movable.1)
+            .into_iter()
+            .filter_map(|c| match c {
+                Some((x, y)) => is_movable(&parsed, x, y).then_some((x, y)),
+                None => None,
+            })
+        {
+            candidates.push(c);
         }
     }
+    // println!("{}", grid2str(&parsed, boundary));
     sum.to_string()
 }
 
