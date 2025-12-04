@@ -94,10 +94,6 @@ fn get_movable_paperrolls(
     for y in 0..boundary.1 {
         let row = &grid[y];
         for x in 0..boundary.0 {
-            let cell = row[x];
-            if cell == CellType::Empty {
-                continue;
-            }
             is_movable(grid, x, y).then(|| movable.push((x, y)));
         }
     }
