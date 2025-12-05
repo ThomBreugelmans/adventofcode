@@ -92,7 +92,6 @@ fn get_movable_paperrolls(
 ) -> Vec<(usize, usize)> {
     let mut movable = vec![];
     for y in 0..boundary.1 {
-        let row = &grid[y];
         for x in 0..boundary.0 {
             is_movable(grid, x, y).then(|| movable.push((x, y)));
         }
