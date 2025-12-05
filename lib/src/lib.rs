@@ -1,5 +1,7 @@
 use inventory;
 
+pub mod span;
+
 /// The structure holding the metadata for each registered solution.
 pub struct Solution {
     pub year: u16,

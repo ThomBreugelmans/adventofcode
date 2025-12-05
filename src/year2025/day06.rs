@@ -4,7 +4,7 @@ fn parse(input: &str) -> Vec<&str> {
     input.trim().split('\n').map(|x| x).collect()
 }
 
-// #[solution(year=2025, day=6, part=1)]
+#[solution(year = 2025, day = 6, part = 1)]
 fn part1(input: &str) -> String {
     let parsed = parse(input);
     let mut sum = 0u64;
