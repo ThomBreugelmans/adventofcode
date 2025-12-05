@@ -1,3 +1,4 @@
+use clap::Parser;
 use dotenv::dotenv;
 use lib::Solution;
 use reqwest::header::{COOKIE, HeaderMap, HeaderValue, USER_AGENT};
@@ -10,6 +11,26 @@ use std::{env, fs::read_to_string, time::Instant};
 // mod year2022;
 // mod year2023;
 mod year2025;
+
+#[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
+struct Args {
+    /// year of challenge solutions to run
+    #[arg(short, long)]
+    year: Option<u16>,
+
+    /// day of challenge solutions to run
+    #[arg(short, long)]
+    day: Option<u8>,
+
+    /// part of challenge solutions to run
+    #[arg(short, long)]
+    part: Option<u8>,
+
+    /// amount of times to run solutions (for benchmarking)
+    #[arg(short, long)]
+    count: Option<usize>,
+}
 
 pub fn format_duration(duration: Duration) -> String {
     // Define the thresholds in nanoseconds (n_s)
@@ -46,32 +67,15 @@ pub fn format_duration(duration: Duration) -> String {
 
 fn main() {
     dotenv().ok();
-    let args: Vec<String> = env::args().collect();
-    if args.len() < 2 {
-        println!("Usage: cargo run <YEAR> [<DAY> [<PART (1 or 2)>] ]");
-        return;
-    }
-
-    let target_year: u16 = args[1].parse().expect("Invalid year");
-    let target_day: Option<u8> = if args.len() >= 3 {
-        Some(args[2].parse().expect("Invalid day"))
-    } else {
-        None
-    };
-    let target_part: Option<u8> = if args.len() >= 4 {
-        Some(args[3].parse().expect("Invalid part (must be 1 or 2)"))
-    } else {
-        None
-    };
-
+    let args = Args::parse();
     // Contains (year, day, part, result, duration)
     let mut results: Vec<(u16, u8, u8, String, String)> = vec![];
 
     // inventory::iter() accesses the static list of all registered Solutions
     for solution in inventory::iter::<Solution> {
-        if solution.year == target_year
-            && (target_day.is_none() || solution.day == target_day.unwrap())
-            && (target_part.is_none() || solution.part == target_part.unwrap())
+        if (args.year.is_none() || solution.year == args.year.unwrap())
+            && (args.day.is_none() || solution.day == args.day.unwrap())
+            && (args.part.is_none() || solution.part == args.part.unwrap())
         {
             // Found specified solution, get input
             let input_fn = format!("./input/year{}/day{:02}", solution.year, solution.day);
@@ -111,15 +115,21 @@ fn main() {
             let input = read_to_string(input_fn)
                 .expect(format!("No input found for {}-{}", solution.year, solution.day).as_str());
 
-            let now = Instant::now();
-            let result = (solution.func)(&input);
-            let duration = now.elapsed();
+            let mut duration = Duration::ZERO;
+            let mut result = None;
+            let count = args.count.unwrap_or(1);
+            for _ in 0..(count) {
+                let now = Instant::now();
+                result = Some((solution.func)(&input));
+                duration += now.elapsed();
+            }
+
             results.push((
                 solution.year,
                 solution.day,
                 solution.part,
-                result,
-                format_duration(duration),
+                result.unwrap(),
+                format_duration(duration / count as u32),
             ));
         }
     }
