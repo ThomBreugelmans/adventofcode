@@ -1,12 +1,14 @@
+// use itertools::Itertools;
 use lib::utils;
 use macros::solution;
 use std::iter::zip;
 
 fn parse(mut input: &str) -> (Vec<Vec<i64>>, Vec<fn(i64, i64) -> Option<i64>>) {
-    input = input.trim();
+    input = input.trim_matches('\n');
     let line_count = input.chars().filter(|c| *c == '\n').count() + 1;
-    let equations = input
-        .split('\n')
+    let mut input_iter = input.split('\n');
+    let equations = input_iter
+        .by_ref()
         .take(line_count - 1)
         .map(|x| {
             x.split_whitespace()
@@ -14,9 +16,8 @@ fn parse(mut input: &str) -> (Vec<Vec<i64>>, Vec<fn(i64, i64) -> Option<i64>>) {
                 .collect()
         })
         .collect();
-    let operations = input
-        .split('\n')
-        .skip(line_count - 1)
+    let operations = input_iter
+        .take(1)
         .flat_map(|l| {
             l.split_whitespace().map(|o| match o {
                 "+" => i64::checked_add,
@@ -29,28 +30,35 @@ fn parse(mut input: &str) -> (Vec<Vec<i64>>, Vec<fn(i64, i64) -> Option<i64>>) {
 }
 
 fn parse2(mut input: &str) -> (Vec<Vec<i64>>, Vec<fn(i64, i64) -> Option<i64>>) {
-    input = input.trim_ascii_end();
+    input = input.trim_matches('\n');
     let line_count = input.chars().filter(|c| *c == '\n').count() + 1;
-    let equations = utils::transpose(
-        input
-            .split('\n')
-            .take(line_count - 1)
-            .map(|r| r.chars().collect())
-            .collect(),
-    )
-    .into_iter()
-    .map(|r| String::from_iter(r).trim().to_string())
-    // .inspect(|r| println!("{r}"))
-    .fold(vec![Vec::new()], |mut v, n| {
-        match n.parse::<i64>() {
-            Ok(number) => v.last_mut().unwrap().push(number),
-            Err(_) => v.push(Vec::new()),
-        };
-        v
-    });
-    let operations: Vec<fn(i64, i64) -> Option<i64>> = input
-        .split('\n')
-        .skip(line_count - 1)
+    let mut input_iter = input.split('\n').peekable();
+    let row_len = input_iter.peek().unwrap().len();
+    let mut row_iterators: Vec<_> = input_iter
+        .by_ref()
+        .take(line_count - 1)
+        .map(|row| row.chars())
+        .collect();
+    let equations = (0..row_len)
+        .map(|_| {
+            let n_string = String::from_iter(row_iterators.iter_mut().map(|r| r.next().unwrap()));
+            n_string
+        })
+        // .inspect(|s| println!("{s}"))
+        .map(|n_string| match n_string.trim().parse::<i64>() {
+            Ok(num) => Some(num),
+            Err(_) => None,
+        })
+        .fold(vec![Vec::new()], |mut v, n| {
+            match n {
+                Some(val) => v.last_mut().unwrap().push(val),
+                None => v.push(Vec::new()),
+            };
+            v
+        });
+
+    let operations: Vec<fn(i64, i64) -> Option<i64>> = input_iter
+        .take(1)
         // .inspect(|x| println!("{x}"))
         .flat_map(|l| {
             l.split_whitespace().map(|o| match o {
