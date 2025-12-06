@@ -1,6 +1,7 @@
 use inventory;
 
 pub mod span;
+pub mod utils;
 
 /// The structure holding the metadata for each registered solution.
 pub struct Solution {
