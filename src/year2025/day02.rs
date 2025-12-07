@@ -38,31 +38,27 @@ fn run_part1(input: &str) -> String {
 #[solution(year = 2025, day = 2, part = 2)]
 fn run_part2(input: &str) -> String {
     let parsed = parse(input);
-    let mut sum = 0;
+    let mut found = Vec::new();
     for (a, b) in parsed {
-        for n in a..=b {
-            let char_count = f64::log10(n as f64) as u32 + 1;
-            'search: for i in 1..=(char_count / 2) {
-                let divisor = 10i64.pow(i);
-                let n1 = n % divisor;
-                if f64::log10(n1 as f64) as u32 + 1 != i {
-                    // else we get stuff like n1=08, which cannot be a repeating sequence
-                    continue;
+        let char_count_a = f64::log10(a as f64) as u32 + 1;
+        let char_count_b = f64::log10(b as f64) as u32 + 1;
+        let start = (a / (10i64.pow(char_count_a))).max(1);
+        let end = b / 10i64.pow(char_count_b / 2);
+        for n in start..=end {
+            let pow_n = 10i64.pow(f64::log10(n as f64) as u32 + 1);
+            let mut m = n;
+            while m < a {
+                m = m * pow_n + n;
+            }
+            while (a..=b).contains(&m) {
+                if !found.contains(&m) {
+                    found.push(m);
                 }
-                let mut n2 = n;
-                while n2 > 0 {
-                    let remainder = n2 % divisor;
-                    n2 /= divisor;
-                    if remainder != n1 {
-                        continue 'search;
-                    }
-                }
-                sum += n;
-                break;
+                m = m * pow_n + n;
             }
         }
     }
-    format!("{}", sum)
+    found.into_iter().sum::<i64>().to_string()
 }
 
 #[allow(dead_code)]
