@@ -1,3 +1,4 @@
+use arboard;
 use clap::Parser;
 use dotenv::dotenv;
 use lib::Solution;
@@ -63,6 +64,17 @@ pub fn format_duration(duration: Duration) -> String {
 
     // Format the output. Using 2 decimal places is common for dynamic units.
     format!("{:.2} {}", value, unit)
+}
+
+fn push_to_clip(result: &String) -> Result<(), arboard::Error> {
+    let mut clipboard = arboard::Clipboard::new()?;
+    clipboard.set_text(result.clone())?;
+    assert_eq!(
+        result,
+        &clipboard.get_text()?,
+        "Expected clipboard to contain the value just pushed"
+    );
+    Ok(())
 }
 
 fn main() {
@@ -163,7 +175,7 @@ fn main() {
     );
     println!("{}", delim);
     results
-        .into_iter()
+        .iter()
         .map(|(y, d, p, r, dur)| {
             format!(
                 "| {y} | {d: <3} | {p: <4} | {r}{} | {dur}{} |",
@@ -173,4 +185,18 @@ fn main() {
         })
         .for_each(|r| println!("{}", r));
     println!("{}\n", delim);
+
+    if args.year.is_some() && args.day.is_some() && args.part.is_some() {
+        // If we have all options set (-y, -d, -p), we can put this on the clipboard, which can be used to easily paste
+        // these parameters also ensure that there is only 1 result in results
+        match push_to_clip(
+            &results
+                .last()
+                .expect("Expected at least 1 result to put on clipboard")
+                .3,
+        ) {
+            Ok(_) => println!("[i] Result copied to clipboard"),
+            Err(e) => eprintln!("[E] Error copying result to clipboard:\n{e}"),
+        }
+    }
 }
