@@ -19,17 +19,20 @@ fn run_part1(input: &str) -> String {
     let parsed = parse(input);
     let mut sum = 0;
     for (a, b) in parsed {
-        //println!("{}-{}", a, b);
-        for n in a..=b {
-            let char_count = f64::log10(n as f64) as u32 + 1;
-            let n1 = n / 10i64.pow(char_count / 2);
-            let n2 = n % 10i64.pow(char_count / 2);
-            if n1 == n2 {
+        let char_count_a = f64::log10(a as f64) as u32 + 1;
+        let half_pow_a = 10i64.pow(char_count_a / 2 + if char_count_a % 2 == 0 { 0 } else { 1 });
+        let half_pow_b = 10i64.pow((f64::log10(b as f64) as u32 + 1) / 2);
+        let n1 = a / half_pow_a;
+        let n2 = b / half_pow_b;
+        for n_ in n1..=n2 {
+            let pow = f64::log10(n_ as f64) as u32 + 1;
+            let n = n_ * 10i64.pow(pow) + n_;
+            if (a..=b).contains(&n) {
                 sum += n;
             }
         }
     }
-    format!("{}", sum)
+    sum.to_string()
 }
 
 #[solution(year = 2025, day = 2, part = 2)]
