@@ -1,50 +1,58 @@
-use itertools::Itertools;
 use macros::solution;
+use nom::{
+    IResult, Parser,
+    branch::alt,
+    character::complete,
+    combinator::opt,
+    multi::separated_list1,
+    sequence::{preceded, terminated},
+};
 
-fn parse(input: &str) -> Vec<(char, i64)> {
-    input
-        .trim()
-        .split('\n')
-        .map(|r| r.chars().collect_vec())
-        .map(|x| {
-            (
-                x[0],
-                x[1..]
-                    .iter()
-                    .rfold(0i64, |r, &v| r * 10 + (v as u8 - '0' as u8) as i64),
-            )
-        })
-        .collect()
+fn parse_right(input: &str) -> IResult<&str, i64> {
+    preceded(nom::character::char('R'), complete::i64).parse(input)
+}
+
+fn parse_left(input: &str) -> IResult<&str, i64> {
+    preceded(nom::character::char('L'), complete::i64.map(|n| -n)).parse(input)
+}
+
+fn parse(input: &str) -> Vec<i64> {
+    let (_, res) = terminated(
+        separated_list1(nom::character::char('\n'), alt((parse_right, parse_left))),
+        opt(nom::character::char('\n')),
+    )
+    .parse_complete(input.trim())
+    .unwrap();
+    res
 }
 
 #[solution(year = 2025, day = 1, part = 1)]
-pub fn run_part1(input: &str) -> String {
+pub fn part1(input: &str) -> String {
     let parsed = parse(input);
     let mut pos = 50i64;
     let mut sum = 0;
-    for (d, count) in parsed {
-        let di = if d == 'L' { -1 } else { 1 };
-        let new_pos = pos + (di * count);
+    for ticks in parsed {
+        let new_pos = pos + ticks;
         if new_pos.rem_euclid(100) == 0 {
             sum += 1;
         }
         pos = new_pos;
     }
-    format!("{}", sum)
+    sum.to_string()
 }
 
 #[solution(year = 2025, day = 1, part = 2)]
-pub fn run_part2(input: &str) -> String {
+pub fn part2(input: &str) -> String {
     let parsed = parse(input);
     let mut pos = 50i64;
     let mut sum = 0;
-    for (d, count) in parsed {
-        let di = if d == 'L' { -1 } else { 1 };
-        let new_pos = pos + (di * count);
+    for ticks in parsed {
+        let d = ticks / ticks.abs();
+        let new_pos = pos + ticks;
         let nearest_100 = if pos % 100 == 0 {
-            pos + (100 * di)
+            pos + (100 * d)
         } else {
-            ((pos as f64 / 100f64) + if d == 'L' { -1f64 } else { 0f64 }).ceil() as i64 * 100
+            ((pos as f64 / 100f64) + if d < 0 { -1f64 } else { 0f64 }).ceil() as i64 * 100
         };
         let dist_nearest = (nearest_100 - pos).abs();
         let dist = (new_pos - pos).abs();
@@ -56,7 +64,7 @@ pub fn run_part2(input: &str) -> String {
 
         pos = new_pos.rem_euclid(100);
     }
-    format!("{}", sum)
+    sum.to_string()
 }
 
 #[allow(dead_code)]
@@ -74,11 +82,11 @@ L82";
 #[test]
 fn test_part1() {
     let answer = "3";
-    assert_eq!(answer, run_part1(TEST_INPUT));
+    assert_eq!(answer, part1(TEST_INPUT));
 }
 
 #[test]
 fn test_part2() {
     let answer = "6";
-    assert_eq!(answer, run_part2(TEST_INPUT));
+    assert_eq!(answer, part2(TEST_INPUT));
 }
