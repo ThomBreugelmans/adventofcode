@@ -1,5 +1,6 @@
 use inventory;
 
+pub mod graph;
 pub mod span;
 pub mod utils;
 
