@@ -27,10 +27,6 @@ fn process<const N: usize>(input: Vec<I64Vec3>) -> usize {
         .take(N)
         .collect();
 
-    pairs
-        .iter()
-        .for_each(|(w, s, d)| println!("Edge::new({s}, {d}, {w}),"));
-
     let mut circuits: Vec<Vec<usize>> = Vec::with_capacity(input.len());
     let mut in_circuit = Vec::with_capacity(input.len());
     for (i, _) in input.iter().enumerate() {
@@ -58,9 +54,8 @@ fn process<const N: usize>(input: Vec<I64Vec3>) -> usize {
         .into_iter()
         .map(|c| c.len())
         .sorted_unstable()
-        .inspect(|l| print!("{l}, "))
         .rev()
-        // .take(3)
+        .take(3)
         .reduce(|a, b| a * b)
         .expect("Should have had at least 1 circuit")
 }
@@ -141,7 +136,7 @@ const TEST_INPUT: &str = "162,817,812
 
 #[test]
 fn test_part1() {
-    let answer = 41;
+    let answer = 40;
     let (_, parsed) = parse(TEST_INPUT).unwrap();
     assert_eq!(answer, process::<10>(parsed));
 }
