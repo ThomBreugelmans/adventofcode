@@ -66,6 +66,8 @@ pub fn format_duration(duration: Duration) -> String {
     format!("{:.2} {}", value, unit)
 }
 
+#[cfg(target_os = "macos")]
+#[cfg(target_os = "windows")]
 fn push_to_clip(result: &String) -> Result<(), arboard::Error> {
     let mut clipboard = arboard::Clipboard::new()?;
     clipboard.set_text(result.clone())?;
@@ -75,6 +77,24 @@ fn push_to_clip(result: &String) -> Result<(), arboard::Error> {
         "Expected clipboard to contain the value just pushed"
     );
     Ok(())
+}
+
+#[cfg(target_os = "linux")]
+fn push_to_clip(result: &String) -> Result<(), arboard::Error> {
+    use std::process::Command;
+
+    if let Ok(e) = env::var("XDG_SESSION_TYPE") {
+        if e == "wayland" {
+            let _ = Command::new("wl-copy").arg(result).spawn();
+        } else {
+            unimplemented!("AoC solution does not yet support copying to clipboard in X11")
+        }
+        Ok(())
+    } else {
+        Err(arboard::Error::Unknown {
+            description: "Unable to determine Linux display manager type".to_string(),
+        })
+    }
 }
 
 fn main() {
